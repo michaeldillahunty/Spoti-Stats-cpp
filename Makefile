@@ -1,5 +1,5 @@
 CXXFLAGS := -std=c++17 -Wall -I./include -I./spotify-api-plusplus/src -ggdb -O0 $(CURL_CXXFLAGS)
-LDLIBS := $(CURL_LIBS) -lcurl
+LDLIBS := $(CURL_LIBS) -lcurl -L/usr/local/lib -lcpr
 HEADERS := $(wildcard *.h)  # if you use '*.hpp' then amend this line accordingly
 SOURCES := $(wildcard *.cpp) # if you use '*.cc' then amend this line accordingly
 OBJS := $(SOURCES:%.cpp=%.o)
