@@ -18,8 +18,8 @@ using json = nlohmann::json;
 
 class SpotifyAPI {
    private: 
-      std::string _client_id;
-      std::string _client_secret;
+      // std::string _client_id;
+      // std::string _client_secret;
 
       // std::string username; 
       // std::string password; 
@@ -28,8 +28,9 @@ class SpotifyAPI {
       // void set_credentials(std::string, std::string);
       // std::string get_credentials(); 
       std::string encode_credentials(const std::string& client_id, const std::string& client_secret);
-      std::string get_token(const std::string& client_id, const std::string& client_secret);
-      json get_user_info(const std::string& access_token, const std::string& filename);
+      std::string get_auth_token(const std::string& client_id, const std::string& client_secret);
+      std::string get_auth_header(const std::string& access_token);
+      json api_request_test(const std::string& access_token, const std::string& user_id, const std::string& filename);
 
 
 };
