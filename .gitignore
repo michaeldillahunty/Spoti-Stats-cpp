@@ -2,3 +2,4 @@
 notes.txt
 *.json
 *.py
+build/
