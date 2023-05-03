@@ -2,7 +2,7 @@
 
 #define UNUSED(x) (void)(x)
 
-bool ClientNetwork::establish_connection(){
+bool ClientNetwork::connect_socket(){
    if ((client_sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
       cout << "[Error]: Failed to create socket" << endl;
       return false;

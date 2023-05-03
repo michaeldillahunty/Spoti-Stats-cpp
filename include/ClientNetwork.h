@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 // 8888
-#define SERVER_PORT 14725
+#define SERVER_PORT 8888
 #define MAX_MSG 512
 
 
@@ -31,7 +31,7 @@ class ClientNetwork {
       struct sockaddr_in sock_addrs; 
 
    public: 
-      bool establish_connection();
+      bool connect_socket();
       bool send_msg(string msg);
       int login(string username, string password);
       int guest(string username, string password);

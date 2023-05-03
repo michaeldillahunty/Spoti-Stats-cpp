@@ -20,7 +20,7 @@ using namespace std;
 // #include "User.h"
 // #include "Singleton.h"
 
-#define SERVER_PORT 14725
+#define SERVER_PORT 8888
 #define MAX_PENDING 3
 #define MAX_MSG 512
 
