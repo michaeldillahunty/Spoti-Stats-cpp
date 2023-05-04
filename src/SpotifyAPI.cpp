@@ -11,6 +11,7 @@ using namespace web::http::client;
 
 
 std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out) {
+    std::cout << "CALLBACK\n\n";
    const std::size_t totalBytes(size * num);
    out->append(in, totalBytes);
    return totalBytes;
@@ -398,12 +399,37 @@ std::string SpotifyAPI::request_authorization(){
    url += "&response_type=code";
    std::string redirect_uri = REDIRECT_URI;
    url += "&redirect_uri=" + redirect_uri;
-   url += "&show_dialog=true";
-   url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
-   std::string command = "open \"" + url + "\"";
-   system(command.c_str());
-   // https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http://localhost:8888/callback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
-   std::string code = "AQCLbnVk3P6tpNLBf5Y9tUsT6MZmMHrksyC1Iq9vIL-OLuHdR1xZhUqflLHyKSnWyNlO6Ogts4jpAdeSCkrLY7aFNg_o0FaNdBQl0Bi9jKdvAj128i96hjKjp7LOXy3-QeqB14ZTKmTE2AHec3PQ0WpC2ayvd16_41QbTD5nwuoj2Dzjfo6d14U_cD6TVAA0ewpA-6SXPzkEm1jHDNXSl6sZYRwvHeeqzKoAUtWckm5_YJI96x_VYbOFzPQsLt1JhxRLBNLVWr5t7lPRa0_ZRkiYRFeXIQ2Dwz7kI2OaXV_krD-0Ni_wTnLv2QhO1_HCRu469kpIZVijbFBoEvpMaiuS9GQJHMP1fnStJzpjDJjc4YDcLGsB4_56SzaKQ99Dm-O-idSyQ2GcR2qRy11CFLOws67nmg_VXgXwoVBZcOS0zlZYNat7zgA";
+//   url += "&show_dialog=true";
+//   url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state%20user-read-recently-played playlist-read-private";
+//   std::string command = "open \"" + url + "\"";
+//   system(command.c_str());
+//   // https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http://localhost:8888/callback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
+//   std::string code = "AQCLbnVk3P6tpNLBf5Y9tUsT6MZmMHrksyC1Iq9vIL-OLuHdR1xZhUqflLHyKSnWyNlO6Ogts4jpAdeSCkrLY7aFNg_o0FaNdBQl0Bi9jKdvAj128i96hjKjp7LOXy3-QeqB14ZTKmTE2AHec3PQ0WpC2ayvd16_41QbTD5nwuoj2Dzjfo6d14U_cD6TVAA0ewpA-6SXPzkEm1jHDNXSl6sZYRwvHeeqzKoAUtWckm5_YJI96x_VYbOFzPQsLt1JhxRLBNLVWr5t7lPRa0_ZRkiYRFeXIQ2Dwz7kI2OaXV_krD-0Ni_wTnLv2QhO1_HCRu469kpIZVijbFBoEvpMaiuS9GQJHMP1fnStJzpjDJjc4YDcLGsB4_56SzaKQ99Dm-O-idSyQ2GcR2qRy11CFLOws67nmg_VXgXwoVBZcOS0zlZYNat7zgA";
+    
+    std::string auth_token = get_auth_token(client_id, client_secret);
+    
+    // TRYING REQUEST WITH FULL URL FROM ABOVE
+    // creating the query to send
+    http_client client(U(url));
+    web::http::http_request req(methods::GET);
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+    http_response response = client.request(req).get();
+
+    // "provided uri is invalid: ...
+    std::cout << "AUTHORIZATION RESPONSE:\n" << response.to_string() << std::endl;
+
+    // check for valid status code and parse response to json object if OK
+    nlohmann::json json_obj;
+    if (response.status_code() == status_codes::OK) {
+       //json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+        std::cout << "STATUS CODE: OK" << std::endl;
+        std::string command = "open \"" + url + "\"";
+        system(command.c_str());
+    } else {
+       throw std::runtime_error("Failed to Authorize");
+    }
+    
+    return json_obj;
 }
 
 // std::string GuestAccessAuthorization(){
