@@ -1,5 +1,14 @@
 #include "../include/SpotifyAPI.hpp"
 
+
+#define AUTHORIZE_URL "https://accounts.spotify.com/authorize"
+#define REDIRECT_URI "http://localhost:8080/callback"
+
+
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
+
 std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out) {
    const std::size_t totalBytes(size * num);
    out->append(in, totalBytes);
@@ -83,7 +92,7 @@ std::string SpotifyAPI::get_auth_token(const std::string& client_id, const std::
       curl_easy_cleanup(curl);
 
       std::ofstream file("auth_token.json"); 
-      json res_json = json::parse(response_buff);
+      nlohmann::json res_json = nlohmann::json::parse(response_buff);
       file << res_json; 
       file.close();
       std::string access_token = res_json["access_token"];
@@ -93,28 +102,15 @@ std::string SpotifyAPI::get_auth_token(const std::string& client_id, const std::
    return NULL;
 }
 
-/* void SpotifyAPI::save_refresh_token(const std::string& refresh_token) { // refresh token won't be modified inside of the function so make it const
-   std::ofstream of("refresh_token.json");
-   of << refresh_token;
-   of.close();
-}
-
-std::string SpotifyAPI::get_refresh_token(){
-   std::ifstream ifs("refresh_token.json");
-   std::string refresh_token;
-   if (ifs.is_open()){
-      std::getline(ifs, refresh_token);
-      ifs.close();
-   }
-   return refresh_token;
-} */
-
 std::string SpotifyAPI::get_auth_header(const std::string& access_token){
    std::string auth_header = "Authorization: Bearer " + access_token;
    return auth_header;
 }
 
-json SpotifyAPI::api_request_test(const std::string& access_token, const std::string& user_id, const std::string& filename){
+/*
+   Example function for sending a public-scoped request to Spotify API 
+*/
+nlohmann::json SpotifyAPI::api_request_test(const std::string& access_token, const std::string& user_id, const std::string& filename){
    CURL*curl = curl_easy_init();
    CURLcode res; 
    if (curl) {
@@ -151,3 +147,170 @@ json SpotifyAPI::api_request_test(const std::string& access_token, const std::st
    }
    return nullptr;
 }
+
+nlohmann::json SpotifyAPI::SpotifyCURL(std::string endpoint, std::string auth_token){
+   CURL*curl = curl_easy_init();
+   CURLcode res; 
+   if (curl) {
+      std::string auth_header = get_auth_header(auth_token);
+      std::string endpoint_url = "https://api.spotify.com";
+      endpoint_url += endpoint; 
+      std::cout << "ENDPOINT URL: " << endpoint_url << std::endl;
+
+      struct curl_slist* headers = nullptr; 
+      headers = curl_slist_append(headers, auth_header.c_str());
+      std::string res_buff;
+      curl_easy_setopt(curl, CURLOPT_URL, endpoint_url.c_str());
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res_buff);
+
+      res = curl_easy_perform(curl);
+      if (res != CURLE_OK){
+         std::cerr << "Failed to send Post Request: " << curl_easy_strerror(res) << std::endl; 
+         return nullptr;
+      }
+      
+      // std::cout << res_buff << std::endl;
+      curl_easy_cleanup(curl);
+
+      std::ofstream file(GUEST_OUTPUT_FILE);
+      file << res_buff; 
+      file.close();
+
+      return res_buff;
+   }
+   return nullptr;
+}
+
+nlohmann::json SpotifyAPI::GetPublicUser(std::string username, std::string auth_token){
+   return SpotifyCURL("/v1/users/" + username, auth_token);
+}
+
+nlohmann::json SpotifyAPI::GetSongID(std::string song, std::string auth_token){
+ /*    http_client client(U("https://api.spotify.com/v1/search"));
+    
+   // Set query parameters
+   uri_builder builder;
+   builder.append_query(U("q"), utility::conversions::to_utf8string(song));
+   builder.append_query(U("type"), U("track"));
+   builder.append_query(U("limit"), 1);
+   web::http::http_request req(methods::GET);
+   req.set_request_uri(builder.to_uri());
+   req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+   client.request(req)
+   .then([](http_response response) {
+      if (response.status_code() == status_codes::OK) {
+         return response.extract_json();
+      }
+      else {
+         throw std::runtime_error("Failed to get song ID");
+      }
+   })
+   .then([](web::json::value json_obj) -> std::string {
+      auto tracks = json_obj[U("tracks")];
+      auto items = tracks[U("items")];
+      if (items.size() == 0) {
+         throw std::runtime_error("Song not found");
+      }
+      auto item = items[0];
+      return utility::conversions::to_utf8string(item[U("id")].as_string());
+   })
+   .wait(); */
+
+    http_client client(U("https://api.spotify.com/v1/search"));
+    
+    // Set query parameters
+    uri_builder builder;
+    builder.append_query(U("q"), utility::conversions::to_utf8string(song));
+    builder.append_query(U("type"), U("track"));
+    builder.append_query(U("limit"), 1);
+    web::http::http_request req(methods::GET);
+    req.set_request_uri(builder.to_uri());
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+    http_response response = client.request(req).get();
+    
+    // Parse JSON response using nlohmann::json library
+    nlohmann::json json_obj;
+    if (response.status_code() == status_codes::OK) {
+        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+    } else {
+        throw std::runtime_error("Failed to get song ID");
+    }
+
+    auto tracks = json_obj["tracks"];
+    auto items = tracks["items"];
+    if (items.size() == 0) {
+        throw std::runtime_error("Song not found");
+    }
+    auto item = items[0];
+    return item["id"];
+}
+
+nlohmann::json SpotifyAPI::GetSong(std::string songID, std::string auth_token){
+ /*  http_client client(U("https://api.spotify.com/v1/tracks/" + songID));
+
+    web::http::http_request req(methods::GET);
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+    return client.request(req)
+    .then([](http_response response) {
+        if (response.status_code() == status_codes::OK) {
+            return response.extract_json();
+        }
+        else {
+            throw std::runtime_error("Failed to get song details");
+        }
+    })
+    .then([](web::json::value json_obj) {
+        return nlohmann::json::parse(utility::conversions::to_utf8string(json_obj.serialize()));
+    })
+    .get(); */
+
+        http_client client(U("https://api.spotify.com/v1/tracks/" + songID));
+    
+    web::http::http_request req(methods::GET);
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+    http_response response = client.request(req).get();
+    
+    // Parse JSON response using nlohmann::json library
+    nlohmann::json json_obj;
+    std::string str_res = "";
+    if (response.status_code() == status_codes::OK) {
+        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+        str_res += response.to_string();
+    } else {
+        throw std::runtime_error("Failed to get song details");
+    }
+
+    return str_res;
+}
+
+
+/*
+   Function for User Level Authorization with the Spotify API 
+*/
+std::string SpotifyAPI::request_authorization(){
+   /**
+    * PROBLEMS:
+    * (1) Authorization URL is working, but the redirect is not 
+    *    - MAYBE: need a HTTP server library 
+   */
+   ClientNetwork network = ClientNetwork();
+   client_id = GetClientID();
+   client_secret = GetClientSecret();
+   std::string url = AUTHORIZE_URL;
+   url += "?client_id=" + client_id;
+   url += "&response_type=code";
+   std::string redirect_uri = REDIRECT_URI;
+   url += "&redirect_uri=" + redirect_uri;
+   url += "&show_dialog=true";
+   url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private";
+   std::string command = "open \"" + url + "\"";
+   system(command.c_str());
+   // https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http://localhost:8888/callback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
+   std::string code = "AQCLbnVk3P6tpNLBf5Y9tUsT6MZmMHrksyC1Iq9vIL-OLuHdR1xZhUqflLHyKSnWyNlO6Ogts4jpAdeSCkrLY7aFNg_o0FaNdBQl0Bi9jKdvAj128i96hjKjp7LOXy3-QeqB14ZTKmTE2AHec3PQ0WpC2ayvd16_41QbTD5nwuoj2Dzjfo6d14U_cD6TVAA0ewpA-6SXPzkEm1jHDNXSl6sZYRwvHeeqzKoAUtWckm5_YJI96x_VYbOFzPQsLt1JhxRLBNLVWr5t7lPRa0_ZRkiYRFeXIQ2Dwz7kI2OaXV_krD-0Ni_wTnLv2QhO1_HCRu469kpIZVijbFBoEvpMaiuS9GQJHMP1fnStJzpjDJjc4YDcLGsB4_56SzaKQ99Dm-O-idSyQ2GcR2qRy11CFLOws67nmg_VXgXwoVBZcOS0zlZYNat7zgA";
+}
+
+// std::string GuestAccessAuthorization(){
+
+// }

@@ -16,6 +16,8 @@ bool ServerNetwork::establish_connection() {
    sock_addrs.sin_family = AF_INET;
    sock_addrs.sin_port = htons(SERVER_PORT);
    sock_addrs.sin_addr.s_addr = INADDR_ANY;
+   inet_aton("127.0.0.1", &sock_addrs.sin_addr);
+
 
    if (::bind(server_sock_fd, (struct sockaddr*)&sock_addrs, sizeof(sock_addrs)) < 0){
       cout << "[Error]: Failed to bind address to socket" << endl;
@@ -59,6 +61,46 @@ string ServerNetwork::recieve_msg(int socket) {
       return "";
    }
    return buffer;
+}
+
+void ServerNetwork::start_server() {
+   ServerNetwork network = ServerNetwork();
+   if (establish_connection() != true){
+      cout << "Failed to connect Server to Socket" << endl;
+      return;
+   }
+
+   while(1){
+      cout << "Server listening for incoming connections..." << endl;
+      if ((curr_socket = accept_connection()) < 0){
+         cout << "Failed to accept connection to Client" << endl;
+         continue;
+      }
+
+      string msg = recieve_msg(curr_socket);
+      if (msg.empty()){
+         cout << "Failed to recieve message" << endl;
+         continue;
+      }
+
+      cout << "Recieved Message: " << msg << endl;
+
+      size_t code_start = msg.find("code="); // search redirect message for authorization code
+      if (code_start != string::npos){
+         string code = msg.substr(code_start + 5, 40);
+         string grant_type = ""; // add the authorization code here 
+         string client_id = GetClientID();
+         string client_secret = GetClientSecret();
+         string redirect_uri = GetAuthURI();
+         
+
+         string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+         send_msg(curr_socket, response);
+      } else {
+         string response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+         send_msg(curr_socket, response);
+      }
+   }
 }
 
 int login(string username, string password) {

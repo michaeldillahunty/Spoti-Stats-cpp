@@ -12,7 +12,7 @@
 // User Authorization URL:
 // "https://accounts.spotify.com/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http://localhost:8000&scope=user-read-private%20user-read-email";
 // https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http://localhost:8888/callback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
-#define CLIENT_ID 23ba501c09bd4194b3f2771c98fb5814
+#define CLIENT_ID "23ba501c09bd4194b3f2771c98fb5814"
 
 /* 
    SPOTIFY MAIN
@@ -21,6 +21,7 @@ int StartConnection();
 void DisplayHomeMenu();
 void DisplayGuestMenu();
 void DisplayUserMenu();
+int StartGuestMode(std::string);
 
 int main(){
    /* SpotifyAPI spotify; 
@@ -65,12 +66,20 @@ int main(){
    
       } else if (selection == 2) { /// GUEST MODE
          cout << "\nCurrent User: Guest" << endl;
-         DisplayGuestMenu();
+         
+         // DisplayGuestMenu();
          /*
             If guest mode is selected:
             - Don't need to do anything with the server
             - Display Guest options
          */
+        
+         SpotifyAPI spotify; 
+         std::string client_id = spotify.GetClientID();
+         std::string client_secret = spotify.GetClientSecret();
+         std::string guest_token = spotify.get_auth_token(client_id, client_secret);
+         std::cout << "Guest Token: " << guest_token << endl;
+         StartGuestMode(guest_token);
 
       } else if (selection == 3) {
          cout << "Exiting..." << endl;
@@ -107,6 +116,7 @@ void DisplayUserMenu(){
 
 
 int StartConnection(){
+   SpotifyAPI spotify;
    bool connection_status = false;
    ClientNetwork network = ClientNetwork(); 
 
@@ -132,9 +142,10 @@ int StartConnection(){
       try {
          if (redir_input == "y") {
             cout << "Redirecting to Spotify Page..." << endl;
-            std::string user_auth_url = "https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fcallback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private";
-            std::string command = "open " + user_auth_url;
-            system(command.c_str());
+            spotify.request_authorization();
+            // std::string user_auth_url = "https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fcallback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private";
+            // std::string command = "open " + user_auth_url;
+            // system(command.c_str());
 
          } else if (redir_input == "n") {
             cout << "Valid Input - No" << endl;
@@ -145,16 +156,34 @@ int StartConnection(){
       } catch (exception& e) {
          cout << e.what() << endl;
       }
-      
-      /* RegisteredUser r_user; 
-      string input_user, input_pass; 
-      cout << "Login to Spotify: \n Username: ";
-      cin >> input_user;
-      cout << "\n Password: ";
-      cin >> input_pass; 
-      r_user.SetLogin(input_user, input_pass); */
 
       
    }
 
+}
+
+int StartGuestMode(std::string token){
+   DisplayGuestMenu();
+   SpotifyAPI spotify; 
+   bool is_running = false;
+   int selection; 
+
+   while (!is_running){
+      std::cout << "> ";
+      std::cin >> selection;
+
+      if (selection == 1) { // find a song
+         /*
+            https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
+         */
+         nlohmann::json requested_song = spotify.GetSong("7aRCf5cLOFN1U7kvtChY1G", token);
+         std::cout << requested_song << std::endl;
+
+      } else if (selection == 4) {
+         std::string input; 
+         std::cout << "Search Username: ";
+         std::cin >> input; 
+         spotify.GetPublicUser(input, token);
+      }
+   }
 }

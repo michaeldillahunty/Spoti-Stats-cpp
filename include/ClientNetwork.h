@@ -1,7 +1,7 @@
 #ifndef CLIENT_NETWORK_H
 #define CLIENT_NETWORK_H
 
-#include "SpotifyAPI.hpp"
+// #include "SpotifyAPI.hpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -18,8 +18,8 @@
 #include <unistd.h>
 
 // 8888
-#define SERVER_PORT 8888
-#define MAX_MSG 512
+#define SERVER_PORT 8080
+#define MAX_MSG 4096
 
 
 using namespace std;
