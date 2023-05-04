@@ -9,6 +9,7 @@
 #include <vector> 
 #include <cstdlib>
 #include <cctype>
+#include <algorithm>
 
 #include "ClientNetwork.h"
 #include "ServerNetwork.h"
@@ -28,6 +29,9 @@
 
 #define GUEST_OUTPUT_FILE "../GuestOutput.json"
 
+// typedef template for storing and mapping CURL query options
+// i.e. {"endpoint", "/v1/tracks/"}
+typedef std::map<std::string, std::string>query_opt_t;
 
 // using json = nlohmann::json;
 
@@ -61,6 +65,8 @@ class SpotifyAPI {
       */
       nlohmann::json GetPublicUser(std::string username, std::string auth_token);
       nlohmann::json GetSongID(std::string song_name, std::string auth_token);
+      
+      nlohmann::json SearchSongs(std::string song_name, query_opt_t options, std::string auth_token);
       nlohmann::json GetSong(std::string songID, std::string auth_token);
       nlohmann::json GetArtist(std::string artistID, std::string auth_token);
 

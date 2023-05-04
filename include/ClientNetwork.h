@@ -22,9 +22,6 @@
 #define MAX_MSG_CLIENT 4096
 
 
-using namespace std;
-
-
 class ClientNetwork {
    private:
       int client_sock_fd = 0;
@@ -32,10 +29,10 @@ class ClientNetwork {
 
    public: 
       bool connect_socket();
-      bool send_msg(string msg);
-      int login(string username, string password);
-      int guest(string username, string password);
-      string receive_response();
+      bool send_msg(std::string msg);
+      int login(std::string username, std::string password);
+      int guest(std::string username, std::string password);
+      std::string receive_response();
 
 };
 

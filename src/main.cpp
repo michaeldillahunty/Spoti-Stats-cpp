@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <cctype>
 #include <cstring>
+#include <istream>
 
 // Redirect URI: http://localhost:8888/callback
 // VSCode Live Server Hosting: http://127.0.0.1:5500/index.html
@@ -48,9 +49,9 @@ int main(){
    
    cout << "> ";
    int selection;
-   cin >> selection;
-   
-   
+   std::string input;
+   std::getline(std::cin, input);
+   selection = std::stoi(input);
 
       /**
          MODE: User
@@ -107,6 +108,7 @@ void DisplayGuestMenu(){
            "[2] Find an Album\n" <<
            "[3] Find an Artist\n" <<
            "[4] Find User Profile\n" <<
+           "[9] USE FOR TESTING\n" <<
            "[5] Exit\n" << endl;
 }
 
@@ -170,8 +172,9 @@ int StartGuestMode(std::string token){
    try {
       while (!is_running){
          std::cout << "> ";
-         std::cin >> selection;
-
+         std::string input; 
+         std::getline(std::cin, input);
+         selection = std::stoi(input);
          if (selection == 1) { // find a song
             /*
                https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
@@ -182,13 +185,30 @@ int StartGuestMode(std::string token){
             int rank = requested_song["popularity"];
             std::cout << "Song Name: " << name << std::endl;
             std::cout << "Song Ranking: " << rank << std::endl;
-            
 
          } else if (selection == 4) {
             std::string input; 
             std::cout << "Search Username: ";
             std::cin >> input; 
-            spotify.GetPublicUser(input, token);
+
+
+         } else if (selection == 9) { // using input 9 for testing
+            query_opt_t q_opts; 
+            // In this case: query options for searching for songs given a name 
+            q_opts["type"] = "track"; 
+            q_opts["market"] = "US";
+            q_opts["limit"] = "5"; // REMEMBER TO CONVER THIS FIELD TO AN INT
+            std::string input; 
+            std::cout << "Search Song Name: ";
+            std::getline(std::cin, input);
+            nlohmann::json songs = spotify.GetSongID(input, token);
+            std::cout << songs.dump(4) << std::endl;
+
+            // nlohmann::json songs_res = spotify.SearchSongs(input, q_opts, token);
+
+         } else {
+            std::cout << "Invalid Selection" << std::endl;
+            break;
          }
       }
    } catch (std::exception& e) {
