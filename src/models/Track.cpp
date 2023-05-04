@@ -1,6 +1,6 @@
 #include "Track.h"
 
-Track::Track(nlohmann::json track_json){
+Track::Track(nlohmann::json track_json) : BasicSpotify(track_json) {
    for(nlohmann::json json : track_json["artists"])
       artists.push_back(std::shared_ptr<Artist>(new Artist(json)));
    
@@ -22,26 +22,17 @@ Track::Track(nlohmann::json track_json){
    uri = track_json["uri"];
 }
 
+// class specific methods
 std::vector<std::shared_ptr<Artist>> Track::GetArtist() const { return artists; }
+
+std::string Track::GetName() const { return name; }
+
+int Track::GetTrackNumber() const { return track_number; }
 
 int Track::GetDurationMs() const { return duration_ms; } 
 
 bool Track::IsExplicit() const { return is_explicit; }
 
-std::map<std::string, std::string> Track::GetExternalUrls() const { return external_urls; }
-
-std::string Track::GetHref() const { return href; }
-
-std::string Track::GetId() const { return id; }
-
 bool Track::IsPlayable() const { return is_playable; }
 
-std::string Track::GetName() const { return name; }
-
 std::string Track::GetPreviewUrl() const { return preview_url; }
-
-int Track::GetTrackNumber() const { return track_number; }
-
-std::string Track::GetType() const { return type; }
-
-std::string Track::GetUri() const { return uri; }

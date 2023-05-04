@@ -1,42 +1,22 @@
 #ifndef ARITST_H
 #define ARTIST_H
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <map>
-#include <fstream>
-#include <vector> 
-#include <cstdlib>
-#include <cctype>
-#include <algorithm>
+#include "BasicSpotify.h"
 
-#include <nlohmann/json.hpp>
-// #include "../../include/SpotifyAPI.hpp"
+class Artist : public BasicSpotify {
 
-
-class Artist {
    private:
-      std::map<std::string, std::string> external_urls;
-      std::string href;
-      std::string id;
-      std::string name;
-      std::string type;
-      std::string uri;
-
+      int followers; 
+      std::vector<std::string>genres; 
+      std::string name; 
+      int popularity; 
+   
    public:
       Artist(nlohmann::json artist_json);
 
-      std::map<std::string, std::string>GetExternalURLs() const;
-      std::string GetHref() const;
-      std::string GetID() const;
+      int GetFollowers() const;
+      int GetPopularity() const;
       std::string GetName() const;
-      std::string GetType() const;
-      std::string GetUri() const;       
-
-
+      std::vector<std::string> GetGenres() const;
 };
-
-
-
 #endif 
