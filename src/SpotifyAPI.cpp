@@ -399,13 +399,24 @@ std::string SpotifyAPI::request_authorization(){
    url += "&response_type=code";
    std::string redirect_uri = REDIRECT_URI;
    url += "&redirect_uri=" + redirect_uri;
-//   url += "&show_dialog=true";
-//   url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state%20user-read-recently-played playlist-read-private";
-//   std::string command = "open \"" + url + "\"";
-//   system(command.c_str());
-//   // https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http://localhost:8888/callback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
-//   std::string code = "AQCLbnVk3P6tpNLBf5Y9tUsT6MZmMHrksyC1Iq9vIL-OLuHdR1xZhUqflLHyKSnWyNlO6Ogts4jpAdeSCkrLY7aFNg_o0FaNdBQl0Bi9jKdvAj128i96hjKjp7LOXy3-QeqB14ZTKmTE2AHec3PQ0WpC2ayvd16_41QbTD5nwuoj2Dzjfo6d14U_cD6TVAA0ewpA-6SXPzkEm1jHDNXSl6sZYRwvHeeqzKoAUtWckm5_YJI96x_VYbOFzPQsLt1JhxRLBNLVWr5t7lPRa0_ZRkiYRFeXIQ2Dwz7kI2OaXV_krD-0Ni_wTnLv2QhO1_HCRu469kpIZVijbFBoEvpMaiuS9GQJHMP1fnStJzpjDJjc4YDcLGsB4_56SzaKQ99Dm-O-idSyQ2GcR2qRy11CFLOws67nmg_VXgXwoVBZcOS0zlZYNat7zgA";
-    
+
+/*
+ // 1) Go to the URL Above
+ // 2) On Agree, Get the code=value from the callback URL
+ // 3)
+ // POST call to api/token endpoint with grant_type, code and redirect_uri 11:49
+ 
+ https://accounts.spotify.com/en/authorize?
+ client_id=23ba501c09bd4194b3f2771c98fb5814
+ &response_type=code
+ &redirect_uri=http://localhost:8080/callback
+ &show_dialog=true
+ &scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
+ */
+/*
+ http://localhost:8080/callback
+ ?code=AQDAmRXMgYn-BGst3yHzYLtndR3BW1SZzPiTkGTcot6a7M-cM-IinbtyFn2ndDQpENe4uVTBKXC9HhVKt6Lk10tmtUe17tKUHpcilw1q2GBrfq7KsnfOx_wK91THiNTgNdPnHmMZE6j3NCBuDaHKk3tqPfA1fbzeeYQMdbeRswmjkqdv_zsWcEHpmmToYAD3W7I24CGD1QW-63_qxzIw-gcYMQlqr4B0GGeo8iM5srNkL6SA9aigsSHz3DxsZRQGS_hCd2w46WwRZbQXJybyW5f0oRSpmSPOoPkHjxAumTEom-uu9nxN4WvrrR3tpxMsASGADC5cWEp15oVWYYNUrTIhvqxiV_e-Q-FvPnlK-MXwa_ZOJyc25zUsc3byDujsywwjT3HozuXjLUuhjyOWJx7g54bUJ3Dw0aP31bJDam8NZmYNGUqKysM
+ */
     std::string auth_token = get_auth_token(client_id, client_secret);
     
     // TRYING REQUEST WITH FULL URL FROM ABOVE
@@ -421,10 +432,12 @@ std::string SpotifyAPI::request_authorization(){
     // check for valid status code and parse response to json object if OK
     nlohmann::json json_obj;
     if (response.status_code() == status_codes::OK) {
-       //json_obj = nlohmann::json::parse(response.extract_utf8string().get());
         std::cout << "STATUS CODE: OK" << std::endl;
+        url += "&show_dialog=true";
+        url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state%20user-read-recently-played playlist-read-private";
         std::string command = "open \"" + url + "\"";
         system(command.c_str());
+        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
     } else {
        throw std::runtime_error("Failed to Authorize");
     }
