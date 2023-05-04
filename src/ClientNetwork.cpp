@@ -21,7 +21,7 @@ bool ClientNetwork::connect_socket(){
 }
 
 string ClientNetwork::receive_response() {
-   char msg_buff[MAX_MSG];
+   char msg_buff[MAX_MSG_CLIENT];
    if (recv(client_sock_fd, msg_buff, sizeof(msg_buff), 0) < 0) {
       return ""; 
    }

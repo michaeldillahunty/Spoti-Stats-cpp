@@ -45,7 +45,7 @@ int ServerNetwork::accept_connection() {
 }
 
 bool ServerNetwork::send_msg(int socket, string msg) {
-   char buffer[MAX_MSG];
+   char buffer[MAX_MSG_SERVER];
    strcpy(buffer, msg.c_str());
    if (send(socket, buffer, sizeof(buffer), 0) < 0) {
       cout << "[Error]: Failed to send message" << endl;
@@ -55,7 +55,7 @@ bool ServerNetwork::send_msg(int socket, string msg) {
 }
 
 string ServerNetwork::recieve_msg(int socket) {
-   char buffer[MAX_MSG];
+   char buffer[MAX_MSG_SERVER];
    if (recv(socket, buffer, sizeof(buffer), 0) < 0) {
       cout << "[Error]: Failed to recieve message" << endl;
       return "";

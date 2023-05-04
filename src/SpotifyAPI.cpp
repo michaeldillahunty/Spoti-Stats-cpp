@@ -248,41 +248,42 @@ nlohmann::json SpotifyAPI::GetSongID(std::string song, std::string auth_token){
 }
 
 nlohmann::json SpotifyAPI::GetSong(std::string songID, std::string auth_token){
- /*  http_client client(U("https://api.spotify.com/v1/tracks/" + songID));
-
-    web::http::http_request req(methods::GET);
-    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
-    return client.request(req)
-    .then([](http_response response) {
-        if (response.status_code() == status_codes::OK) {
-            return response.extract_json();
-        }
-        else {
-            throw std::runtime_error("Failed to get song details");
-        }
-    })
-    .then([](web::json::value json_obj) {
-        return nlohmann::json::parse(utility::conversions::to_utf8string(json_obj.serialize()));
-    })
-    .get(); */
-
-        http_client client(U("https://api.spotify.com/v1/tracks/" + songID));
+/** NOTE: This commented code is returning the server HTTP response for some reason -> COULD USE THIS IN THE USER LOGIN AUTHENTICATION
+ * 
+ * 
+ *         
+   http_client client(U("https://api.spotify.com/v1/tracks/" + songID));
     
-    web::http::http_request req(methods::GET);
-    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
-    http_response response = client.request(req).get();
-    
-    // Parse JSON response using nlohmann::json library
-    nlohmann::json json_obj;
-    std::string str_res = "";
-    if (response.status_code() == status_codes::OK) {
-        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
-        str_res += response.to_string();
-    } else {
-        throw std::runtime_error("Failed to get song details");
-    }
+   web::http::http_request req(methods::GET);
+   req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+   http_response response = client.request(req).get();
+   
+   // Parse JSON response using nlohmann::json library
+   nlohmann::json json_obj;
+   std::string str_res = "";
+   if (response.status_code() == status_codes::OK) {
+      json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+      str_res += response.to_string();
+   } else {
+      throw std::runtime_error("Failed to get song details");
+   } */
 
-    return str_res;
+   // creating the query to send
+   http_client client(U("https://api.spotify.com/v1/tracks/" + songID)); 
+   web::http::http_request req(methods::GET);
+   req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+   http_response response = client.request(req).get();
+
+   // check for valid status code and parse response to json object if OK
+   nlohmann::json json_obj;
+   if (response.status_code() == status_codes::OK) {
+      json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+      json_obj.erase("available_markets");
+   } else {
+      throw std::runtime_error("Failed to get song details");
+   }
+   
+   return json_obj;
 }
 
 

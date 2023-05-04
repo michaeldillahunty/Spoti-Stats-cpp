@@ -19,7 +19,7 @@
 
 // 8888
 #define SERVER_PORT 8080
-#define MAX_MSG 4096
+#define MAX_MSG_CLIENT 4096
 
 
 using namespace std;

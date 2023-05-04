@@ -167,23 +167,32 @@ int StartGuestMode(std::string token){
    SpotifyAPI spotify; 
    bool is_running = false;
    int selection; 
+   try {
+      while (!is_running){
+         std::cout << "> ";
+         std::cin >> selection;
 
-   while (!is_running){
-      std::cout << "> ";
-      std::cin >> selection;
+         if (selection == 1) { // find a song
+            /*
+               https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
+            */
+            nlohmann::json requested_song = spotify.GetSong("7aRCf5cLOFN1U7kvtChY1G", token);
+            std::cout << requested_song.dump(4) << std::endl;
+            std::string name = requested_song["name"];
+            int rank = requested_song["popularity"];
+            std::cout << "Song Name: " << name << std::endl;
+            std::cout << "Song Ranking: " << rank << std::endl;
+            
 
-      if (selection == 1) { // find a song
-         /*
-            https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
-         */
-         nlohmann::json requested_song = spotify.GetSong("7aRCf5cLOFN1U7kvtChY1G", token);
-         std::cout << requested_song << std::endl;
-
-      } else if (selection == 4) {
-         std::string input; 
-         std::cout << "Search Username: ";
-         std::cin >> input; 
-         spotify.GetPublicUser(input, token);
+         } else if (selection == 4) {
+            std::string input; 
+            std::cout << "Search Username: ";
+            std::cin >> input; 
+            spotify.GetPublicUser(input, token);
+         }
       }
+   } catch (std::exception& e) {
+      std::cout << e.what() << std::endl;
    }
+   
 }

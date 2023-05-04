@@ -35,7 +35,7 @@ class SpotifyAPI {
    private: 
       std::string client_id = "23ba501c09bd4194b3f2771c98fb5814";
       std::string client_secret = "eb80eac6f244443fae50300fc8db1479";
-      
+
    public: 
       std::string encode_credentials(const std::string& client_id, const std::string& client_secret);
       // std::string get_auth_token(const std::string& client_id, const std::string& client_secret, const std::string& refresh_token);

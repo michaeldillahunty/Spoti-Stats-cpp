@@ -25,7 +25,7 @@ using json = nlohmann::json;
 
 #define SERVER_PORT 8080
 #define MAX_PENDING 3
-#define MAX_MSG 4096
+#define MAX_MSG_SERVER 4096
 
 class ServerNetwork {
    private:
