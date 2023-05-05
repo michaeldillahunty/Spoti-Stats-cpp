@@ -1,6 +1,7 @@
 #include "../include/SpotifyAPI.hpp"
 #include "../include/ClientNetwork.h"
 #include "../include/RegisteredUser.hpp"
+#include "../include/SpotifyFactory.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include <cctype>
@@ -204,7 +205,10 @@ int StartGuestMode(std::string token){
             nlohmann::json songs = spotify.GetSongID(input, token);
             std::cout << songs.dump(4) << std::endl;
 
-            // nlohmann::json songs_res = spotify.SearchSongs(input, q_opts, token);
+
+            SpotifyFactory factory;
+            nlohmann::json track_data = spotify.GetSongID(input, token);
+            // std::cout << track_data.dump(4) << std::endl;
 
          } else {
             std::cout << "Invalid Selection" << std::endl;
