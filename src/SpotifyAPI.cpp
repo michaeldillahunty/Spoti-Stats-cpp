@@ -207,7 +207,11 @@ nlohmann::json SpotifyAPI::GetSongID(std::string song, const std::string auth_to
    http_client client(U("https://api.spotify.com/v1/search"));
    uri_builder builder;
    builder.append_query(U("q"), utility::conversions::to_utf8string(song));
-   builder.append_query(U("type"), U("track"));
+    builder.append_query(U("type"), U("track"));
+    // THIS IS TO CHANGE TO SEARCH FOR AN ARTIST
+//   builder.append_query(U("type"), U("artist"));
+    // THIS IS TO CHANGE TO SEARCH FOR AN ALBUM
+    // builder.append_query(U("type"), U("album"));
    builder.append_query(U("limit"), 5); // only return the top 5 tracks with the given name 
    builder.append_query(U("market"), U("US"));  // Only search in US market
    web::http::http_request req(methods::GET);
