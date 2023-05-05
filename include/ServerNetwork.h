@@ -27,8 +27,11 @@ using json = nlohmann::json;
 #define MAX_PENDING 3
 #define MAX_MSG_SERVER 4096
 
+// Singleton Design Pattern
 class ServerNetwork {
    private:
+    static ServerNetwork* instancePtr;
+    
       int server_sock_fd, curr_socket;
       struct sockaddr_in sock_addrs; 
       string client_id = "23ba501c09bd4194b3f2771c98fb5814";
@@ -38,6 +41,20 @@ class ServerNetwork {
 
    public: 
       ServerNetwork(){}
+    // delete the copy constructor
+    ServerNetwork(const ServerNetwork& obj) = delete;
+    // get instance function
+    static ServerNetwork* getInstance() {
+        if (instancePtr == nullptr) {
+            // not created yet
+            instancePtr = new ServerNetwork();
+            return instancePtr;
+        }
+        else {
+            // already created
+            return instancePtr;
+        }
+    }
       bool establish_connection();
       int establish_connection(int socket);
       int accept_connection();

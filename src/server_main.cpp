@@ -4,10 +4,12 @@
    SERVER MAIN
 */
 void* ConnectionListener(void* arg);
-pthread_mutex_t m; 
+pthread_mutex_t m;
+// ServerNetwork Singleton
+ServerNetwork* ServerNetwork::instancePtr = nullptr;
 
 int main(){
-
+    
    if (pthread_mutex_init(&m, NULL) != 0){
       cerr << "Failed to Initialize Mutex" << endl;
    }
@@ -25,23 +27,26 @@ int main(){
 }
 
 void* ConnectionListener(void* arg){
-   bool is_connected = true;
+   
+    ServerNetwork* network = ServerNetwork::getInstance();
+    
+    bool is_connected = true;
    vector<pthread_t*> thread_vec;
    int client_sock_fd; 
 
-   ServerNetwork network = ServerNetwork();
-   if (network.establish_connection() != true) {
+   // ServerNetwork network = ServerNetwork();
+   if (network->establish_connection() != true) {
       cout << "Failed to connect Server to Socket" << endl; 
    } 
 
    while (1){
       cout << "Client-Server Connection Successfully Established!" << endl;
       cout << "Server Connected on Port #" << SERVER_PORT << endl;
-      if ((client_sock_fd = network.accept_connection()) < 0) {
+      if ((client_sock_fd = network->accept_connection()) < 0) {
          cout << "Failed to accept connection to Client" << endl;
       }
       string test_msg = "[From Server]: Initial Test Message";
-      network.send_msg(client_sock_fd, test_msg);
+      network->send_msg(client_sock_fd, test_msg);
       
    }
 

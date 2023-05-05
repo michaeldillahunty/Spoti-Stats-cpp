@@ -64,20 +64,20 @@ string ServerNetwork::recieve_msg(int socket) {
 }
 
 void ServerNetwork::start_server() {
-   ServerNetwork network = ServerNetwork();
-   if (establish_connection() != true){
+   ServerNetwork* network = ServerNetwork::getInstance();
+   if (network->establish_connection() != true){
       cout << "Failed to connect Server to Socket" << endl;
       return;
    }
 
    while(1){
       cout << "Server listening for incoming connections..." << endl;
-      if ((curr_socket = accept_connection()) < 0){
+      if ((curr_socket = network->accept_connection()) < 0){
          cout << "Failed to accept connection to Client" << endl;
          continue;
       }
 
-      string msg = recieve_msg(curr_socket);
+      string msg = network->recieve_msg(curr_socket);
       if (msg.empty()){
          cout << "Failed to recieve message" << endl;
          continue;
