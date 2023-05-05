@@ -23,16 +23,13 @@ include_directories(${CURL_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/models)
 
-add_executable(server src/ServerNetwork.cpp src/server_main.cpp)
-add_executable(spotify src/ClientNetwork.cpp src/SpotifyAPI.cpp src/main.cpp)
+file(GLOB MODELS_SRCS "src/models/*.cpp")
+
+# add_library(SpotifyFactoryLib )
+
+add_executable(server src/ServerNetwork.cpp src/server_main.cpp ${MODELS_SRCS} src/SpotifyFactory.cpp)
+add_executable(spotify src/ClientNetwork.cpp src/SpotifyAPI.cpp src/main.cpp ${MODELS_SRCS})
+
 
 target_link_libraries(server nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
-target_link_libraries(spotify PRIVATE nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto )
-
-
-
-
-# target_link_libraries(client PRIVATE nlohmann_json::nlohmann_json)
-# target_link_libraries(client client_lib spotify_lib)
-# target_link_libraries(server server_lib)
-# target_link_libraries(server_test server_lib)
+target_link_libraries(spotify nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
