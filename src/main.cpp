@@ -118,6 +118,8 @@ void DisplayUserMenu(){
 }
 
 
+
+
 int StartConnection(){
    SpotifyAPI spotify;
    bool connection_status = false;
@@ -148,7 +150,7 @@ int StartConnection(){
             spotify.request_authorization();
             // std::string user_auth_url = "https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fcallback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private";
             // std::string command = "open " + user_auth_url;
-            // system(command.c_str());
+            // system(command.c_str());\
 
          } else if (redir_input == "n") {
             cout << "Valid Input - No" << endl;
@@ -163,6 +165,13 @@ int StartConnection(){
       
    }
 
+}
+
+
+
+template<>
+std::shared_ptr<Track> SpotifyFactory::CreateSpotifyObject<Track>(nlohmann::json json_obj) {
+    return std::make_shared<Track>(json_obj);
 }
 
 int StartGuestMode(std::string token){
@@ -208,6 +217,16 @@ int StartGuestMode(std::string token){
 
             SpotifyFactory factory;
             nlohmann::json track_data = spotify.GetSongID(input, token);
+            
+            /**
+             * ERROR: 
+             * `track_data["type"]` ---->>>> is NULL
+            */
+            std::string track_type = track_data["type"];
+            std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_type));
+            std::cout << "WE'RE GETTING SOMEWHERE" << std::endl;
+            std::string track_id = track_obj->GetName();
+            std::cout << track_id << std::endl;
             // std::cout << track_data.dump(4) << std::endl;
 
          } else {
