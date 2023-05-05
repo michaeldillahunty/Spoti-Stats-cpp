@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <nlohmann/json.hpp>
 
+
 class BasicSpotify {
    protected:
       std::map<std::string, std::string> external_urls; 
@@ -21,25 +22,33 @@ class BasicSpotify {
       std::string uri;
 
    public:
-      BasicSpotify(nlohmann::json json_obj);
+      BasicSpotify(nlohmann::json json_obj){
+         for (auto it = json_obj["external_urls"].begin(); it != json_obj["external_urls"].end(); ++it)
+            external_urls[it.key()] = it.value();
 
-      std::map<std::string, std::string> GetExternalUrls() const {
+         href = json_obj["href"];
+         id = json_obj["id"];
+         type = json_obj["type"];
+         uri = json_obj["uri"];
+      }
+
+      virtual std::map<std::string, std::string> GetExternalUrls() const {
          return external_urls;
       }
-      std::string GetHref() const {
+      virtual std::string GetHref() const {
          return href; 
       }
-      std::string GetId() const {
+      virtual std::string GetId() const {
          return id; 
       }
-      std::string GetType() const {
+      virtual std::string GetType() const {
          return type;
       }
-      std::string GetUri() const {
+      virtual std::string GetUri() const {
          return uri; 
       }
-
+      virtual ~BasicSpotify(){};
 };
 
 
-#endif 
+#endif  

@@ -22,3 +22,20 @@ int Artist::GetPopularity() const { return popularity; }
 std::string Artist::GetName() const { return name; }
 
 std::vector<std::string> Artist::GetGenres() const { return genres; }
+
+std::map<std::string, std::string> Artist::GetExternalUrls() const {
+   return BasicSpotify::GetExternalUrls();
+}
+
+std::string Artist::GetHref() const {
+   return BasicSpotify::GetHref();
+}
+std::string Artist::GetId() const {
+   return BasicSpotify::GetId();
+}
+std::string Artist::GetType() const {
+   return BasicSpotify::GetType();
+}
+std::string Artist::GetUri() const {
+   return BasicSpotify::GetUri();
+}
