@@ -2,6 +2,7 @@
 #include "../include/ClientNetwork.h"
 #include "../include/RegisteredUser.hpp"
 #include "../include/SpotifyFactory.hpp"
+#include "../include/Search.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include <cctype>
@@ -206,11 +207,9 @@ int StartGuestMode(std::string token){
              
 //             SearchPlaylist playlist_search(search);
 //             nlohmann::json songs = playlist_search.perform_search(input, token);
-             
-             
-             
+                          
             std::cout << songs.dump(4) << std::endl;
-            // nlohmann::json songs = spotify.GetSongID(input, token);
+
             query_opt_t q_opts;
             q_opts["type"] = "track";
             q_opts["limit"] = "5";
@@ -222,20 +221,7 @@ int StartGuestMode(std::string token){
             q_opts["limit"] = "5";
             q_opts["market"] = "US";
             nlohmann::json top5_albums = spotify.SearchSongs(input, q_opts, token);
-
-            // std::cout << songs.dump(4) << std::endl;
-
-            SpotifyFactory factory;
             nlohmann::json track_data = spotify.GetSongID(input, token);
-            
-            /**
-             * ERROR: 
-             * `track_data["type"]` ---->>>> is NULL
-            */
-            // nlohmann::json track_data = spotify.GetSongID(input, token);
-            // std::string track_type = track_data["type"];
-            // std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_data["type"]));
-            // std::shared_ptr<Track> track_obj = std::shared_ptr<Track>(new Track((spotify.GetSongID(input, token))));
 
          } else {
             std::cout << "Invalid Selection" << std::endl;
