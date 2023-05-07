@@ -28,7 +28,7 @@ file(GLOB MODELS_SRCS "src/models/*.cpp")
 # add_library(SpotifyFactoryLib )
 
 add_executable(server src/ServerNetwork.cpp src/server_main.cpp ${MODELS_SRCS} src/SpotifyFactory.cpp)
-add_executable(spotify src/ClientNetwork.cpp src/SpotifyAPI.cpp src/main.cpp ${MODELS_SRCS})
+add_executable(spotify src/ClientNetwork.cpp src/SpotifyAPI.cpp src/main.cpp ${MODELS_SRCS} src/SpotifyFactory.cpp src/Search.cpp)
 
 
 target_link_libraries(server nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
