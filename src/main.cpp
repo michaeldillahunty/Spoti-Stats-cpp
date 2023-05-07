@@ -50,8 +50,6 @@ int main(){
          
          StartConnection();
          
-         
-   
       } else if (selection == 2) { /// GUEST MODE
          cout << "\nCurrent User: Guest" << endl;
       
@@ -196,6 +194,7 @@ int StartGuestMode(std::string token){
             Search search;
             SearchTrack track_search(search);
             nlohmann::json songs = track_search.perform_search(input, token);
+            
 //            nlohmann::json songs = spotify.GetSongID(input, token);
              
              
@@ -208,20 +207,20 @@ int StartGuestMode(std::string token){
 //             SearchPlaylist playlist_search(search);
 //             nlohmann::json songs = playlist_search.perform_search(input, token);
                           
-            std::cout << songs.dump(4) << std::endl;
+            spotify.PrintTop5("track", songs);
 
-            query_opt_t q_opts;
-            q_opts["type"] = "track";
-            q_opts["limit"] = "5";
-            q_opts["market"] = "US";
-            nlohmann::json top5_songs = spotify.SearchSongs(input, q_opts, token);
+            // query_opt_t q_opts;
+            // q_opts["type"] = "track";
+            // q_opts["limit"] = "5";
+            // q_opts["market"] = "US";
+            // nlohmann::json top5_songs = spotify.SearchSongs(input, q_opts, token);
 
-            query_opt_t q_opts_album;
-            q_opts["type"] = "album";
-            q_opts["limit"] = "5";
-            q_opts["market"] = "US";
-            nlohmann::json top5_albums = spotify.SearchSongs(input, q_opts, token);
-            nlohmann::json track_data = spotify.GetSongID(input, token);
+            // query_opt_t q_opts_album;
+            // q_opts["type"] = "album";
+            // q_opts["limit"] = "5";
+            // q_opts["market"] = "US";
+            // nlohmann::json top5_albums = spotify.SearchSongs(input, q_opts, token);
+            // nlohmann::json track_data = spotify.GetSongID(input, token);
 
          } else {
             std::cout << "Invalid Selection" << std::endl;
