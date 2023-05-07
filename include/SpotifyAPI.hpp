@@ -108,5 +108,32 @@ class SearchTrack : public Decorator {
     nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
 };
 
+class SearchArtist : public Decorator {
+    Search& search;
+
+    public:
+    SearchArtist(Search& s): search{s} {}
+
+    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
+};
+
+class SearchAlbum : public Decorator {
+    Search& search;
+
+    public:
+    SearchAlbum(Search& s): search{s} {}
+
+    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
+};
+
+class SearchPlaylist : public Decorator {
+    Search& search;
+
+    public:
+    SearchPlaylist(Search& s): search{s} {}
+
+    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
+};
+
 
 #endif

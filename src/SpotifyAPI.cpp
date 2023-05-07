@@ -25,15 +25,13 @@ nlohmann::json Search::perform_search(std::string search_value, const std::strin
     builder.append_query(U("q"), utility::conversions::to_utf8string(search_value));
     builder.append_query(U("limit"), 5); // only return the top 5 tracks with the given name
     builder.append_query(U("market"), U("US"));  // Only search in US market
-    
-    std::cout << "QUERY: " << builder.query() << std::endl;
 
-    return std::string("Spotify Search Initiated\n");
+    return std::string("Spotify Search Initiated...");
 }
 
 nlohmann::json SearchTrack::perform_search(std::string search_value, const std::string auth_token) {
     // set the values for builder and client
-    search.perform_search(search_value, auth_token);
+    std::cout << search.perform_search(search_value, auth_token) << std::endl;
     
     uri_builder builder = search.get_builder();
     http_client* search_client = search.get_client();
@@ -53,19 +51,91 @@ nlohmann::json SearchTrack::perform_search(std::string search_value, const std::
        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
        json_obj.erase("available_markets");
     } else {
-       throw std::runtime_error("Failed to get song id");
+       throw std::runtime_error("Failed to get track id");
     }
     
-    int arr_size = json_obj["tracks"]["items"].size();
-    std::string name;
-    std::string artist;
-    std::string id;
-    for (int i=0; i<arr_size; i++) {
-        name = json_obj["tracks"]["items"][i]["name"];
-        id = json_obj["tracks"]["items"][i]["id"];
-        artist = json_obj["tracks"]["items"][i]["artists"][0]["name"];
-        
-        std::cout << "Name, Artist, ID: " << name << ", " << artist << ", " << id << std::endl;
+    return json_obj;
+}
+
+nlohmann::json SearchArtist::perform_search(std::string search_value, const std::string auth_token) {
+    // set the values for builder and client
+    search.perform_search(search_value, auth_token);
+    
+    uri_builder builder = search.get_builder();
+    http_client* search_client = search.get_client();
+    
+    builder.append_query(U("type"), U("artist"));
+
+    // now all members are ready to perform a search
+    http_request req(methods::GET);
+    req.set_request_uri(builder.to_uri());
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+
+    // Send HTTP request and parse JSON response
+    http_response response = search_client->request(req).get();
+    nlohmann::json json_obj;
+    std::cout << "Status Code: " << response.status_code() << std::endl;
+    if (response.status_code() == status_codes::OK) {
+       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+       json_obj.erase("available_markets");
+    } else {
+       throw std::runtime_error("Failed to get artist id");
+    }
+    
+    return json_obj;
+}
+
+nlohmann::json SearchAlbum::perform_search(std::string search_value, const std::string auth_token) {
+    // set the values for builder and client
+    search.perform_search(search_value, auth_token);
+    
+    uri_builder builder = search.get_builder();
+    http_client* search_client = search.get_client();
+    
+    builder.append_query(U("type"), U("album"));
+
+    // now all members are ready to perform a search
+    http_request req(methods::GET);
+    req.set_request_uri(builder.to_uri());
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+
+    // Send HTTP request and parse JSON response
+    http_response response = search_client->request(req).get();
+    nlohmann::json json_obj;
+    std::cout << "Status Code: " << response.status_code() << std::endl;
+    if (response.status_code() == status_codes::OK) {
+       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+       json_obj.erase("available_markets");
+    } else {
+       throw std::runtime_error("Failed to get album id");
+    }
+    
+    return json_obj;
+}
+
+nlohmann::json SearchPlaylist::perform_search(std::string search_value, const std::string auth_token) {
+    // set the values for builder and client
+    search.perform_search(search_value, auth_token);
+    
+    uri_builder builder = search.get_builder();
+    http_client* search_client = search.get_client();
+    
+    builder.append_query(U("type"), U("playlist"));
+
+    // now all members are ready to perform a search
+    http_request req(methods::GET);
+    req.set_request_uri(builder.to_uri());
+    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+
+    // Send HTTP request and parse JSON response
+    http_response response = search_client->request(req).get();
+    nlohmann::json json_obj;
+    std::cout << "Status Code: " << response.status_code() << std::endl;
+    if (response.status_code() == status_codes::OK) {
+       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+       json_obj.erase("available_markets");
+    } else {
+       throw std::runtime_error("Failed to get playlist id");
     }
     
     return json_obj;
