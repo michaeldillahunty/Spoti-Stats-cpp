@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 #include <nlohmann/json.hpp>
 
 
@@ -18,6 +19,8 @@ class SpotifyFactory {
    public:
       template<typename T> 
       static std::shared_ptr<T> CreateSpotifyObject(nlohmann::json json_obj);
+      // CreateSpotifyObject: Creating a `Track` Object 
+      //    shared_ptr<Track> track = shared_ptr<Track>(new Track(Search("/v1/track/" + track_id)));
       static void DeleteSpotify(BasicSpotify*spotify_obj);
 };
 
