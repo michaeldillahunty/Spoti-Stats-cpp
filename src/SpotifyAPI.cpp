@@ -17,6 +17,16 @@ std::size_t callback(const char* in, std::size_t size, std::size_t num, std::str
    return totalBytes;
 }
 
+/*
+ 
+ Decorator Design Pattern
+ Search::perform_search sets up the client and uri builder to use later, top 5 will be returned in json form.
+ SearchTrack::perform_search finishes uri_builder and send a search for Tracks
+ SearchArtist::perform_search finishes uri_builder and send a search for Artists
+ SearchAlbum::perform_search finishes uri_builder and send a search for Album
+ SearchPlaylist::perform_search finishes uri_builder and send a search for Playlists
+ 
+ */
 nlohmann::json Search::perform_search(std::string search_value, const std::string auth_token) {
     // the base perform_search just initiates the member values
     // these are used for every search
@@ -59,7 +69,7 @@ nlohmann::json SearchTrack::perform_search(std::string search_value, const std::
 
 nlohmann::json SearchArtist::perform_search(std::string search_value, const std::string auth_token) {
     // set the values for builder and client
-    search.perform_search(search_value, auth_token);
+    std::cout << search.perform_search(search_value, auth_token) << std::endl;
     
     uri_builder builder = search.get_builder();
     http_client* search_client = search.get_client();
@@ -87,7 +97,7 @@ nlohmann::json SearchArtist::perform_search(std::string search_value, const std:
 
 nlohmann::json SearchAlbum::perform_search(std::string search_value, const std::string auth_token) {
     // set the values for builder and client
-    search.perform_search(search_value, auth_token);
+    std::cout << search.perform_search(search_value, auth_token) << std::endl;
     
     uri_builder builder = search.get_builder();
     http_client* search_client = search.get_client();
@@ -115,7 +125,7 @@ nlohmann::json SearchAlbum::perform_search(std::string search_value, const std::
 
 nlohmann::json SearchPlaylist::perform_search(std::string search_value, const std::string auth_token) {
     // set the values for builder and client
-    search.perform_search(search_value, auth_token);
+    std::cout << search.perform_search(search_value, auth_token) << std::endl;
     
     uri_builder builder = search.get_builder();
     http_client* search_client = search.get_client();
@@ -140,6 +150,9 @@ nlohmann::json SearchPlaylist::perform_search(std::string search_value, const st
     
     return json_obj;
 }
+/*
+ End of Decorator Design Pattern
+ */
 
 /** 
  * DESCRIPTION: Function that encodes the client_id and client_secret into a base 64 string 

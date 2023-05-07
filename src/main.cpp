@@ -214,8 +214,8 @@ int StartGuestMode(std::string token){
 //            nlohmann::json songs = spotify.GetSongID(input, token);
              
              Search search;
-//             SearchTrack track_search(search);
-//             nlohmann::json songs = track_search.perform_search(input, token);
+             SearchTrack track_search(search);
+             nlohmann::json songs = track_search.perform_search(input, token);
              
 //             SearchArtist artist_search(search);
 //             nlohmann::json songs = artist_search.perform_search(input, token);
@@ -223,8 +223,8 @@ int StartGuestMode(std::string token){
 //             SearchAlbum album_search(search);
 //             nlohmann::json songs = album_search.perform_search(input, token);
              
-             SearchPlaylist playlist_search(search);
-             nlohmann::json songs = playlist_search.perform_search(input, token);
+//             SearchPlaylist playlist_search(search);
+//             nlohmann::json songs = playlist_search.perform_search(input, token);
              
              
              
