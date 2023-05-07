@@ -212,7 +212,7 @@ nlohmann::json SpotifyAPI::GetSongID(std::string song, const std::string auth_to
 //   builder.append_query(U("type"), U("artist"));
     // THIS IS TO CHANGE TO SEARCH FOR AN ALBUM
     // builder.append_query(U("type"), U("album"));
-   builder.append_query(U("limit"), 5); // only return the top 5 tracks with the given name 
+   builder.append_query(U("limit"), 1); // only return the top 5 tracks with the given name
    builder.append_query(U("market"), U("US"));  // Only search in US market
    web::http::http_request req(methods::GET);
    req.set_request_uri(builder.to_uri());
@@ -228,6 +228,9 @@ nlohmann::json SpotifyAPI::GetSongID(std::string song, const std::string auth_to
       throw std::runtime_error("Failed to get song id");
    }
    // std::cout << json_obj << std::endl;
+    
+    std::cout << "SONG ID: " << json_obj["tracks"]["items"][0]["id"] << std::endl;
+    
    return json_obj;
    // Extract IDs of tracks with the same name as the query
    // nlohmann::json track_ids;

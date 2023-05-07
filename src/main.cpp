@@ -211,23 +211,19 @@ int StartGuestMode(std::string token){
             std::string input; 
             std::cout << "Search Song Name: ";
             std::getline(std::cin, input);
-            nlohmann::json songs = spotify.GetSongID(input, token);
-            std::cout << songs.dump(4) << std::endl;
+//            nlohmann::json songs = spotify.GetSongID(input, token);
+             
+             Search search;
+             SearchTrack track_search(search);
+             nlohmann::json songs = track_search.perform_search(input, token);
+             
+             
+            //std::cout << songs.dump(4) << std::endl;
 
 
             SpotifyFactory factory;
             nlohmann::json track_data = spotify.GetSongID(input, token);
             
-            /**
-             * ERROR: 
-             * `track_data["type"]` ---->>>> is NULL
-            */
-            std::string track_type = track_data["type"];
-            std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_type));
-            std::cout << "WE'RE GETTING SOMEWHERE" << std::endl;
-            std::string track_id = track_obj->GetName();
-            std::cout << track_id << std::endl;
-            // std::cout << track_data.dump(4) << std::endl;
 
          } else {
             std::cout << "Invalid Selection" << std::endl;
