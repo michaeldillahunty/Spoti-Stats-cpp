@@ -31,7 +31,7 @@
 
 // typedef template for storing and mapping CURL query options
 // i.e. {"endpoint", "/v1/tracks/"}
-typedef std::map<std::string, std::string>query_opt_t;
+typedef std::map<std::string, std::string> query_opt_t;
 
 // using json = nlohmann::json;
 
@@ -66,13 +66,17 @@ class SpotifyAPI {
       nlohmann::json GetPublicUser(std::string username, std::string auth_token);
       std::string GetSongID(std::string song_name, std::string auth_token);
       
-      nlohmann::json SearchSongs(std::string song_name, query_opt_t options, std::string auth_token);
+      nlohmann::json SearchSongs(std::string song_name, std::map<std::string, std::string>options, std::string auth_token);
       nlohmann::json GetSong(std::string songID, std::string auth_token);
       nlohmann::json GetArtist(std::string artistID, std::string auth_token);
 
 
+      void PrintTop5Tracks(nlohmann::json json_obj);
+      void PrintTop5(std::string type, nlohmann::json json_obj);
+
       std::string GetClientID() { return this->client_id; }
       std::string GetClientSecret() { return this->client_secret; }
+
 
 };
 

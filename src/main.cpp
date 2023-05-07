@@ -77,27 +77,30 @@ int main(){
 }
 
 void DisplayHomeMenu(){
-   cout << "[1] Login to Spotify\n" <<
+   std::cout << "[1] Login to Spotify\n" <<
            "[2] Continue as Guest\n" <<
-           "[3] Exit" << endl;
+           "[3] Exit" << std::endl;
 }
 
 void DisplayGuestMenu(){
-   cout << "[1] Find a Song\n" <<
+   std::cout << "[1] Find a Song\n" <<
            "[2] Find an Album\n" <<
            "[3] Find an Artist\n" <<
            "[4] Find User Profile\n" <<
            "[9] USE FOR TESTING\n" <<
-           "[5] Exit\n" << endl;
+           "[5] Exit\n" << std::endl;
 }
 
 void DisplayUserMenu(){
-   
+   std::cout << "CURRENTLY NOT WORKING" << std::endl;
 }
 
 
 
-
+/** 
+ * Function used for User-Authentication/non-public scoped api requests 
+ * 
+*/
 int StartConnection(){
    SpotifyAPI spotify;
    bool connection_status = false;
@@ -147,10 +150,10 @@ int StartConnection(){
 
 
 
-template<>
-std::shared_ptr<Track> SpotifyFactory::CreateSpotifyObject<Track>(nlohmann::json json_obj) {
-    return std::make_shared<Track>(json_obj);
-}
+// template<>
+// std::shared_ptr<Track> SpotifyFactory::CreateSpotifyObject<Track>(nlohmann::json json_obj) {
+//     return std::make_shared<Track>(json_obj);
+// }
 
 int StartGuestMode(std::string token){
    DisplayGuestMenu();
@@ -168,15 +171,9 @@ int StartGuestMode(std::string token){
                https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
             */
             SpotifyFactory factory;
-            query_opt_t q_opts;
-            q_opts["type"] = "track"; 
-            q_opts["market"] = "US";
-            q_opts["limit"] = "5"; // REMEMBER TO CONVER THIS FIELD TO AN INT
-            // nlohmann::json new_song = spotify.SearchSongs("Search & Rescue", q_opts, token);
-            // std::cout << requested_song.dump(4) << std::endl;
-            // nlohmann::json song_id = spotify.GetSongID("Search & Rescue", token);
             std::string song_id = spotify.GetSongID("Search & Rescue", token);
             std::cout << "song id: " << song_id << std::endl;
+
 
          } else if (selection == 4) {
             std::string input; 
@@ -185,32 +182,39 @@ int StartGuestMode(std::string token){
 
 
          } else if (selection == 9) { // using input 9 for testing
-            query_opt_t q_opts; 
+            /* query_opt_t q_opts; 
             // In this case: query options for searching for songs given a name 
             q_opts["type"] = "track"; 
             q_opts["market"] = "US";
-            q_opts["limit"] = "5"; // REMEMBER TO CONVER THIS FIELD TO AN INT
+            q_opts["limit"] = "5"; // REMEMBER TO CONVER THIS FIELD TO AN INT */
+            
+            SpotifyFactory factory;
             std::string input; 
             std::cout << "Search Song Name: ";
             std::getline(std::cin, input);
             // nlohmann::json songs = spotify.GetSongID(input, token);
+            query_opt_t q_opts;
+            q_opts["type"] = "track";
+            q_opts["limit"] = "5";
+            q_opts["market"] = "US";
+            nlohmann::json top5_songs = spotify.SearchSongs(input, q_opts, token);
+
+            query_opt_t q_opts_album;
+            q_opts["type"] = "album";
+            q_opts["limit"] = "5";
+            q_opts["market"] = "US";
+            nlohmann::json top5_albums = spotify.SearchSongs(input, q_opts, token);
+
             // std::cout << songs.dump(4) << std::endl;
-
-
-            SpotifyFactory factory;
-            nlohmann::json track_data = spotify.GetSongID(input, token);
 
             /**
              * ERROR: 
              * `track_data["type"]` ---->>>> is NULL
             */
+            // nlohmann::json track_data = spotify.GetSongID(input, token);
             // std::string track_type = track_data["type"];
             // std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_data["type"]));
             // std::shared_ptr<Track> track_obj = std::shared_ptr<Track>(new Track((spotify.GetSongID(input, token))));
-            // std::cout << "WE'RE GETTING SOMEWHERE" << std::endl;
-            // std::string track_id = track_obj->GetType();
-            // std::cout << track_id << std::endl;
-            // std::cout << track_data.dump(4) << std::endl;
 
          } else {
             std::cout << "Invalid Selection" << std::endl;

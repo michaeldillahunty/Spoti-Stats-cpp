@@ -1,14 +1,13 @@
 #include "../include/SpotifyAPI.hpp"
-using namespace web;
-using namespace web::http;
-using namespace web::http::client;
 
 #define AUTHORIZE_URL "https://accounts.spotify.com/authorize"
 #define REDIRECT_URI "http://localhost:8080/callback"
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
 
 std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out) {
     std::cout << "CALLBACK\n\n";
@@ -206,6 +205,7 @@ std::string SpotifyAPI::GetSongID(std::string song, const std::string auth_token
       }
    }
    
+   // Creating the HTTP GET Request
    http_client client(U("https://api.spotify.com/v1/search"));
    uri_builder builder;
    builder.append_query(U("q"), utility::conversions::to_utf8string(encoded_song_name));
@@ -216,6 +216,7 @@ std::string SpotifyAPI::GetSongID(std::string song, const std::string auth_token
    req.set_request_uri(builder.to_uri());
    req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
 
+   // Handling the response from the Spotify API
    http_response response = client.request(req).get();
    nlohmann::json json_obj;
    if (response.status_code() == status_codes::OK) {
@@ -243,7 +244,6 @@ std::string SpotifyAPI::GetSongID(std::string song, const std::string auth_token
 
 
    /// OLD FUNCTION CODE
-
 /*    std::cout << "encoded song name: " << encoded_song_name << std::endl;
    // Create HTTP client and request URI
    http_client client(U("https://api.spotify.com/v1/search"));
@@ -295,6 +295,7 @@ nlohmann::json SpotifyAPI::SearchSongs(std::string song_name, query_opt_t option
    http_client client(U(endpoint_uri));
    std::cout << "ENDPOINT URI: " << endpoint_uri << std::endl;
    uri_builder builder;
+
    std::string q_type = options.at("type");
    int q_limit = stoi(options.at("limit"));
    std::string q_market = options.at("market");
@@ -315,13 +316,83 @@ nlohmann::json SpotifyAPI::SearchSongs(std::string song_name, query_opt_t option
    if (response.status_code() == status_codes::OK) {
       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
       json_obj.erase("available_markets");
+      // Filter out unwanted JSON data
+      /* if (q_type == "track") {
+         json_obj.erase("albums");
+         json_obj.erase("artists");
+      } else if (q_type == "album") {
+         json_obj.erase("tracks");
+         json_obj.erase("artists");
+      } else if (q_type == "artist") {
+         json_obj.erase("tracks");
+         json_obj.erase("albums");
+      } */
    } else {
       throw std::runtime_error("Failed to get song(s)");
    }
-   std::cout << json_obj << std::endl;
+
+   // std::cout << json_obj.dump(4) << std::endl;
+
+   std::string artist_name1 = json_obj["tracks"]["items"][0]["artists"][0]["name"]; // getting the name of the first artist from the first track
+   // std::cout << "Artist 1: " << artist_name1 << std::endl;
+
+   // PrintTop5Tracks(json_obj);
+   // std::cout << "************ TOP 5 DYNAMIC ************" << std::endl;
+   // PrintTop5("track", json_obj);
+
    return json_obj;
 }
 
+
+/* void SpotifyAPI::PrintTop5Tracks(nlohmann::json json_obj) {
+   // Get all artist names from all tracks
+   int i = 1; 
+   for (const auto& track : json_obj["tracks"]["items"]) {
+      
+      std::cout << "Track " << i << " Name: " << track["name"] << std::endl;
+      for (const auto& artist : track["artists"]) {
+         std::string artist_name = artist["name"];
+   
+         std::cout << "Artist: " << artist_name << std::endl;
+      }
+      i++;
+      std::cout << std::endl;
+   }
+} */
+
+void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
+   /* Text Formatting: 
+      - \033[1m escape code for bold text
+      - \033[32m sets the color to green
+      - \033[0m escape code resets the text format to the default
+   */
+   if (type == "track") {
+      int i = 1;
+      for (const auto& track : json_obj["tracks"]["items"]) {
+         std::cout << "\033[1m\033[32mTrack " << i << " Name: " << "\033[0m" << track["name"] << std::endl;
+         std::cout << "  Artist(s): ";
+         bool first_artist = true;
+         for (const auto& artist : track["artists"]) {
+            std::string artist_name = artist["name"];
+            if (!first_artist)
+               std::cout << ", ";
+            std::cout << artist_name;
+            first_artist = false;
+         }
+         i++;
+         std::cout << "\n" << std::endl;
+      }
+
+   } else if (type == "artist") {
+
+   } else {
+
+   }
+}
+
+/*
+   Function returns a JSON object for a given songID
+*/
 nlohmann::json SpotifyAPI::GetSong(std::string songID, std::string auth_token){
 /** NOTE: This commented code is returning the server HTTP response for some reason -> COULD USE THIS IN THE USER LOGIN AUTHENTICATION
  * 
@@ -423,7 +494,3 @@ std::string SpotifyAPI::request_authorization(){
     
     return json_obj;
 }
-
-// std::string GuestAccessAuthorization(){
-
-// }
