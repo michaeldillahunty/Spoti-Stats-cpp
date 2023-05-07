@@ -7,6 +7,9 @@ using namespace web;
 using namespace web::http;
 using namespace web::http::client;
 
+// helper function
+nlohmann::json send_http_request(http_client* search_client, uri_builder builder, std::string auth_token);
+
 /** Decorator Design Pattern */
 struct Decorator {
    virtual nlohmann::json perform_search(std::string search_value, const std::string auth_token) = 0;
