@@ -64,7 +64,7 @@ class SpotifyAPI {
          - GetSong 
       */
       nlohmann::json GetPublicUser(std::string username, std::string auth_token);
-      nlohmann::json GetSongID(std::string song_name, std::string auth_token);
+      std::string GetSongID(std::string song_name, std::string auth_token);
       
       nlohmann::json SearchSongs(std::string song_name, query_opt_t options, std::string auth_token);
       nlohmann::json GetSong(std::string songID, std::string auth_token);

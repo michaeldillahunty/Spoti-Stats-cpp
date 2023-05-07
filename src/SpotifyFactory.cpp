@@ -2,7 +2,9 @@
 
 template<typename T>
 std::shared_ptr<T> SpotifyFactory::CreateSpotifyObject(nlohmann::json json_obj){
+   // maybe try unique pointers
    std::string type = json_obj["type"];
+   std::cout << "IN FUNCTION : " << type << std::endl;
    std::shared_ptr<T> obj_ptr; 
    if (type == "artist") {
       obj_ptr = std::make_shared<Artist>(json_obj);
@@ -19,6 +21,15 @@ std::shared_ptr<T> SpotifyFactory::CreateSpotifyObject(nlohmann::json json_obj){
 void SpotifyFactory::DeleteSpotify(BasicSpotify*spotify_obj){
    delete(spotify_obj);
 }
+
+// BasicSpotify*SpotifyFactory::CreateObject(const nlohmann::json json_obj){
+//    std::string type = json_obj["type"];
+   
+//       if (type == "track") {
+//          return new Track(json_obj);
+//       } 
+//    return nullptr;
+// }
 
 // template <typename T> 
 // std::shared_ptr<BasicSpotify> SpotifyFactory::CreateSpotifyObject(nlohmann::json json_obj) {

@@ -26,21 +26,6 @@ void DisplayUserMenu();
 int StartGuestMode(std::string);
 
 int main(){
-   /* SpotifyAPI spotify; 
-   std::string client_id = "23ba501c09bd4194b3f2771c98fb5814";
-   std::string client_secret = "eb80eac6f244443fae50300fc8db1479";
-   std::string user_id = "dillahuntym";
-
-   try {
-
-      // std::string refresh_token = spotify.get_refresh_token();
-      std::string token = spotify.get_auth_token(client_id, client_secret);
-      std::cout << "Access Token: " << token << std::endl;
-
-      std::string user_info = spotify.api_request_test(token, user_id, "user_info.json");
-   } catch (std::exception& e) {
-      std::cout << e.what() << std::endl;
-   } */
    std::string client_id = "23ba501c09bd4194b3f2771c98fb5814";
    std::string client_secret = "eb80eac6f244443fae50300fc8db1479";
    ClientNetwork network = ClientNetwork();
@@ -68,14 +53,7 @@ int main(){
    
       } else if (selection == 2) { /// GUEST MODE
          cout << "\nCurrent User: Guest" << endl;
-         
-         // DisplayGuestMenu();
-         /*
-            If guest mode is selected:
-            - Don't need to do anything with the server
-            - Display Guest options
-         */
-        
+      
          SpotifyAPI spotify; 
          std::string client_id = spotify.GetClientID();
          std::string client_secret = spotify.GetClientSecret();
@@ -150,7 +128,7 @@ int StartConnection(){
             spotify.request_authorization();
             // std::string user_auth_url = "https://accounts.spotify.com/en/authorize?client_id=23ba501c09bd4194b3f2771c98fb5814&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fcallback&show_dialog=true&scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private";
             // std::string command = "open " + user_auth_url;
-            // system(command.c_str());\
+            // system(command.c_str());
 
          } else if (redir_input == "n") {
             cout << "Valid Input - No" << endl;
@@ -189,12 +167,16 @@ int StartGuestMode(std::string token){
             /*
                https://open.spotify.com/track/6C9SwoZ5OrxcvkntgA5t8s?si=ea8187c2bfd84b86
             */
-            nlohmann::json requested_song = spotify.GetSong("7aRCf5cLOFN1U7kvtChY1G", token);
-            std::cout << requested_song.dump(4) << std::endl;
-            std::string name = requested_song["name"];
-            int rank = requested_song["popularity"];
-            std::cout << "Song Name: " << name << std::endl;
-            std::cout << "Song Ranking: " << rank << std::endl;
+            SpotifyFactory factory;
+            query_opt_t q_opts;
+            q_opts["type"] = "track"; 
+            q_opts["market"] = "US";
+            q_opts["limit"] = "5"; // REMEMBER TO CONVER THIS FIELD TO AN INT
+            // nlohmann::json new_song = spotify.SearchSongs("Search & Rescue", q_opts, token);
+            // std::cout << requested_song.dump(4) << std::endl;
+            // nlohmann::json song_id = spotify.GetSongID("Search & Rescue", token);
+            std::string song_id = spotify.GetSongID("Search & Rescue", token);
+            std::cout << "song id: " << song_id << std::endl;
 
          } else if (selection == 4) {
             std::string input; 
@@ -211,22 +193,23 @@ int StartGuestMode(std::string token){
             std::string input; 
             std::cout << "Search Song Name: ";
             std::getline(std::cin, input);
-            nlohmann::json songs = spotify.GetSongID(input, token);
-            std::cout << songs.dump(4) << std::endl;
+            // nlohmann::json songs = spotify.GetSongID(input, token);
+            // std::cout << songs.dump(4) << std::endl;
 
 
             SpotifyFactory factory;
             nlohmann::json track_data = spotify.GetSongID(input, token);
-            
+
             /**
              * ERROR: 
              * `track_data["type"]` ---->>>> is NULL
             */
-            std::string track_type = track_data["type"];
-            std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_type));
-            std::cout << "WE'RE GETTING SOMEWHERE" << std::endl;
-            std::string track_id = track_obj->GetName();
-            std::cout << track_id << std::endl;
+            // std::string track_type = track_data["type"];
+            // std::shared_ptr<Track> track_obj = std::dynamic_pointer_cast<Track>(factory.CreateSpotifyObject<Track>(track_data["type"]));
+            // std::shared_ptr<Track> track_obj = std::shared_ptr<Track>(new Track((spotify.GetSongID(input, token))));
+            // std::cout << "WE'RE GETTING SOMEWHERE" << std::endl;
+            // std::string track_id = track_obj->GetType();
+            // std::cout << track_id << std::endl;
             // std::cout << track_data.dump(4) << std::endl;
 
          } else {
