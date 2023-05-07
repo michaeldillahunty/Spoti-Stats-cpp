@@ -90,24 +90,10 @@ class Search : public Decorator {
     uri_builder builder;
 
     public:
-        nlohmann::json perform_search(std::string search_value, const std::string auth_token) override {
-            // the base perform_search just initiates the member values
-            // these are used for every search
-            search_client = new http_client(U("https://api.spotify.com/v1/search"));
-            
-            builder.append_query(U("q"), utility::conversions::to_utf8string(search_value));
-            builder.append_query(U("limit"), 5); // only return the top 5 tracks with the given name
-            builder.append_query(U("market"), U("US"));  // Only search in US market
-            
-            std::cout << "QUERY: " << builder.query() << std::endl;
-
-            return std::string("Spotify Search Initiated\n");
-        }
-    
+    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
     http_client* get_client() {
         return search_client;
     }
-    
     uri_builder get_builder() {
         return builder;
     }
@@ -119,46 +105,7 @@ class SearchTrack : public Decorator {
     public:
     SearchTrack(Search& s): search{s} {}
 
-    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override {
-        // set the values for builder and client
-        search.perform_search(search_value, auth_token);
-        
-        uri_builder builder = search.get_builder();
-        http_client* search_client = search.get_client();
-        
-        builder.append_query(U("type"), U("track"));
-
-        // now all members are ready to perform a search
-        http_request req(methods::GET);
-        req.set_request_uri(builder.to_uri());
-        req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
-
-        // Send HTTP request and parse JSON response
-        http_response response = search_client->request(req).get();
-        nlohmann::json json_obj;
-        std::cout << "Status Code: " << response.status_code() << std::endl;
-        if (response.status_code() == status_codes::OK) {
-           json_obj = nlohmann::json::parse(response.extract_utf8string().get());
-           json_obj.erase("available_markets");
-        } else {
-           throw std::runtime_error("Failed to get song id");
-        }
-        
-        int arr_size = json_obj["tracks"]["items"].size();
-        std::string name;
-        std::string artist;
-        std::string id;
-        for (int i=0; i<arr_size; i++) {
-            name = json_obj["tracks"]["items"][i]["name"];
-            id = json_obj["tracks"]["items"][i]["id"];
-            artist = json_obj["tracks"]["items"][i]["artists"][0]["name"];
-            
-            std::cout << "Name, Artist, ID: " << name << ", " << artist << ", " << id << std::endl;
-        }
-        
-        return json_obj;
-
-    }
+    nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
 };
 
 
