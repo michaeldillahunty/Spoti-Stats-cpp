@@ -2,6 +2,7 @@
 #include "../include/ClientNetwork.h"
 #include "../include/RegisteredUser.hpp"
 #include "../include/SpotifyFactory.hpp"
+#include "../src/models/BasicSpotify.h"
 #include "../include/Search.hpp"
 #include "../include/DetailedSearch.hpp"
 #include <cstdlib>
