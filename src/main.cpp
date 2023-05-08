@@ -277,6 +277,9 @@ nlohmann::json search_helper(std::string type, std::string prompt, Search& searc
    } else if (type == "artist") {
       SearchArtist artist_search(search_obj);
       return artist_search.perform_search(input, token);
+   } else if (type == "playlist") {
+      SearchPlaylist playlist_search(search_obj);
+      return playlist_search.perform_search(input, token); 
    }
 
 }
