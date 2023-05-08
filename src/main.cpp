@@ -54,13 +54,15 @@ int main(){
          
       } else if (selection == 2) { /// GUEST MODE
          cout << "\nCurrent User: Guest" << endl;
-      
          SpotifyAPI spotify; 
          std::string client_id = spotify.GetClientID();
          std::string client_secret = spotify.GetClientSecret();
          std::string guest_token = spotify.get_auth_token(client_id, client_secret);
          std::cout << "Guest Token: " << guest_token << endl;
-         StartGuestMode(guest_token);
+         bool is_running = false; 
+         while (!is_running){
+            StartGuestMode(guest_token);
+         }
 
       } else if (selection == 3) {
          cout << "Exiting..." << endl;
@@ -163,8 +165,8 @@ int StartGuestMode(std::string token){
    bool is_running = false;
    int selection; 
    try {
-      while (!is_running){
-         std::cout << "> ";
+      std::cout << "> ";
+      // while (!is_running){
          std::string input; 
          std::getline(std::cin, input);
          selection = std::stoi(input);
@@ -240,9 +242,9 @@ int StartGuestMode(std::string token){
 
          } else {
             std::cout << "Invalid Selection" << std::endl;
-            break;
+
          }
-      }
+      // }
    } catch (std::exception& e) {
       std::cout << e.what() << std::endl;
    }

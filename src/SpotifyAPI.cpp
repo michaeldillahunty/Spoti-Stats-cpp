@@ -398,17 +398,6 @@ nlohmann::json SpotifyAPI::SearchSongs(std::string song_name, query_opt_t option
    if (response.status_code() == status_codes::OK) {
       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
       json_obj.erase("available_markets");
-      // Filter out unwanted JSON data
-      /* if (q_type == "track") {
-         json_obj.erase("albums");
-         json_obj.erase("artists");
-      } else if (q_type == "album") {
-         json_obj.erase("tracks");
-         json_obj.erase("artists");
-      } else if (q_type == "artist") {
-         json_obj.erase("tracks");
-         json_obj.erase("albums");
-      } */
    } else {
       throw std::runtime_error("Failed to get song(s)");
    }
