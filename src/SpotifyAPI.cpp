@@ -483,17 +483,13 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
       int i = 1; 
       for (const auto& playlist : json_obj["playlists"]["items"]){
          std::cout << "\033[1m\033[32m" << i << ") Playlist: " << "\033[0m" << playlist["name"] << std::endl;
-         std::cout << "    by: ";
+         std::cout << "    by: " << playlist["owner"]["display_name"] << "\n" << std::endl;
          bool first = true;
-         for (const auto& creator : playlist["ower"]) {
-         std::string artist_name = playlist["display_name"];
-            if (!first)
-               std::cout << ", ";
-            std::cout << artist_name;
-            first = false;
-         }
+         if (!first)
+            std::cout << ", ";
+         first = false;
          i++;
-         std::cout << "\n" << std::endl;
+         std::cout << std::endl;
       }
 
    } else if (type == "user") {
@@ -502,7 +498,7 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
          std::cout << "\033[1m\033[32m" << i << ") User: " << "\033[0m" << json_obj["display_name"] << std::endl;
          std::cout << "    profile link: " << json_obj["external_urls"]["spotify"] << std::endl;
          i++;
-         std::cout << "\n" << std::endl;
+         std::cout << std::endl;
       // }
    }
 }
