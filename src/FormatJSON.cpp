@@ -79,10 +79,35 @@ std::string FormatJSON::FormatArtistJson(){
 }  
 
 std::string FormatJSON::FormatAlbumJson(){
-   std::vector<std::string> tracks, external_urls; 
-   std::string artist_name, album_name, release_date, album_type;
+   nlohmann::json album_json = GetJsonObject();
+   std::vector<std::string> tracks, artist_names;
+   std::string external_url, album_name, release_date, album_type;
+    
+    album_name = album_json["name"];
+    release_date = album_json["release_date"];
+    album_type = album_json["type"];
+    external_url = album_json["external_urls"]["spotify"];
+    for (const auto& artists : album_json["artists"]) {
+        std::string artist_name = artists["name"];
+        artist_names.push_back(artist_name);
+    }
+    for (const auto& all_tracks : album_json["tracks"]["items"]) {
+        std::string track_name = all_tracks["name"];
+        tracks.push_back(track_name);
+    }
+    
+    nlohmann::json result {
+        {"name", album_name},
+        {"artists", artist_names},
+        {"release_date", release_date},
+        {"tracks", tracks},
+        {"album_type", album_type},
+        {"external_url", external_url}
+    };
+    
+    return result;
 }
 
-std::string FormatJSON::FormatUserProfileJson(){
-   std::string display_name, external_url, followers, id;
-}
+// std::string FormatJSON::FormatUserProfileJson(){
+//    std::string display_name, external_url, followers, id;
+// }
