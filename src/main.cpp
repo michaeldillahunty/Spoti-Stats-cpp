@@ -3,6 +3,7 @@
 #include "../include/RegisteredUser.hpp"
 #include "../include/SpotifyFactory.hpp"
 #include "../include/Search.hpp"
+#include "../include/DetailedSearch.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include <cctype>
@@ -191,11 +192,10 @@ int StartGuestMode(std::string token){
             std::string input; 
             std::cout << "Search Song Name: ";
             std::getline(std::cin, input);
-            Search search;
-            SearchTrack track_search(search);
-            nlohmann::json songs = track_search.perform_search(input, token);
             
-//            nlohmann::json songs = spotify.GetSongID(input, token);
+             Search search;
+//            SearchTrack track_search(search);
+//            nlohmann::json songs = track_search.perform_search(input, token);
              
              
 //             SearchArtist artist_search(search);
@@ -208,6 +208,22 @@ int StartGuestMode(std::string token){
 //             nlohmann::json songs = playlist_search.perform_search(input, token);
                           
             spotify.PrintTop5("track", songs);
+             
+             DetailedSearch detailed_search;
+             
+//             std::string track_id = songs["tracks"]["items"][0]["id"];
+//             nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
+
+//             std::string artist_id = songs["artists"]["items"][0]["id"];
+//             nlohmann::json detailed_artist = detailed_search.detailed_search("v1/artists/", artist_id, token);
+             
+//             std::string album_id = songs["albums"]["items"][0]["id"];
+//             nlohmann::json detailed_album = detailed_search.detailed_search("v1/albums/", album_id, token);
+             
+//             std::string playlist_id = songs["playlists"]["items"][0]["id"];
+//             nlohmann::json detailed_playlist = detailed_search.detailed_search("v1/playlists/", playlist_id, token);
+             
+//             std::cout << detailed_playlist.dump(4) << std::endl;
 
             // query_opt_t q_opts;
             // q_opts["type"] = "track";
