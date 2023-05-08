@@ -1,7 +1,7 @@
 #include "../include/FormatJSON.hpp"
 #include <iostream>
 
-std::string FormatJSON::FormatTrackJson(){
+nlohmann::json FormatJSON::FormatTrackJson(){
    nlohmann::json track_json = GetJsonObject();
    std::string name, album, duration_ms, release_date, popularity, is_explicit;
    std::vector<std::string> external_urls;
@@ -31,7 +31,7 @@ std::string FormatJSON::FormatTrackJson(){
    };
 }
 
-std::string FormatJSON::FormatPlaylistJson(){
+nlohmann::json FormatJSON::FormatPlaylistJson(){
    nlohmann::json playlist_json = GetJsonObject();
    std::string collaborative, owner, followers, total_tracks, description, name;
    std::vector<std::string> external_urls;
@@ -56,10 +56,10 @@ std::string FormatJSON::FormatPlaylistJson(){
       {"external_urls", external_urls}
    };
 
-   return formatted_json.dump();
+   return formatted_json;
 }
 
-std::string FormatJSON::FormatArtistJson(){
+nlohmann::json FormatJSON::FormatArtistJson(){
    nlohmann::json artist_json = GetJsonObject();
    std::string followers, name, popularity;
    std::vector<std::string> genres_vec, external_urls; 
@@ -79,7 +79,7 @@ std::string FormatJSON::FormatArtistJson(){
    }
 }  
 
-std::string FormatJSON::FormatAlbumJson(){
+nlohmann::json FormatJSON::FormatAlbumJson(){
    nlohmann::json album_json = GetJsonObject();
    std::vector<std::string> tracks, artist_names;
    std::string external_url, album_name, release_date, album_type;

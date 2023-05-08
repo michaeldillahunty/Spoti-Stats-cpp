@@ -10,7 +10,6 @@ using namespace web::http;
 using namespace web::http::client;
 
 std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out) {
-    std::cout << "CALLBACK\n\n";
    const std::size_t totalBytes(size * num);
    out->append(in, totalBytes);
    return totalBytes;
@@ -52,7 +51,7 @@ std::string SpotifyAPI::encode_credentials(const std::string& client_id, const s
    while (encoded_credentials.size() % 4) {
       encoded_credentials.push_back('=');
    }
-   std::cout << "encoded credentials: " << encoded_credentials << std::endl;
+   // std::cout << "encoded credentials: " << encoded_credentials << std::endl;
    return encoded_credentials;   
 }
 
@@ -293,23 +292,6 @@ nlohmann::json SpotifyAPI::SearchSongs(std::string song_name, query_opt_t option
    return json_obj;
 }
 
-
-/* void SpotifyAPI::PrintTop5Tracks(nlohmann::json json_obj) {
-   // Get all artist names from all tracks
-   int i = 1; 
-   for (const auto& track : json_obj["tracks"]["items"]) {
-      
-      std::cout << "Track " << i << " Name: " << track["name"] << std::endl;
-      for (const auto& artist : track["artists"]) {
-         std::string artist_name = artist["name"];
-   
-         std::cout << "Artist: " << artist_name << std::endl;
-      }
-      i++;
-      std::cout << std::endl;
-   }
-} */
-
 void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
    /* Text Formatting: 
       - \033[1m escape code for bold text
@@ -414,7 +396,7 @@ std::string SpotifyAPI::request_authorization(){
     * (1) Authorization URL is working, but the redirect is not 
     *    - MAYBE: need a HTTP server library 
    */
-   ClientNetwork network = ClientNetwork();
+   // ClientNetwork network = ClientNetwork();
    client_id = GetClientID();
    client_secret = GetClientSecret();
    std::string url = AUTHORIZE_URL;
@@ -423,28 +405,7 @@ std::string SpotifyAPI::request_authorization(){
    std::string redirect_uri = REDIRECT_URI;
    url += "&redirect_uri=" + redirect_uri;
 
-/*
-   // 1) Go to the URL Above
-   // 2) On Agree, Get the code=value from the callback URL
-   // 3)
-   // POST call to api/token endpoint with grant_type, code and redirect_uri 11:49
-   
-   https://accounts.spotify.com/en/authorize?
-   client_id=23ba501c09bd4194b3f2771c98fb5814
-   &response_type=code
-   &redirect_uri=http://localhost:8080/callback
-   &show_dialog=true
-   &scope=user-read-private%20user-read-email%20user-modify-playback-state%20user-read-playback-position%20user-library-read%20streaming%20user-read-playback-state%20user-read-recently-played%20playlist-read-private
- */
-
-/*
- http://localhost:8080/callback
- ?code=AQDAmRXMgYn-BGst3yHzYLtndR3BW1SZzPiTkGTcot6a7M-cM-IinbtyFn2ndDQpENe4uVTBKXC9HhVKt6Lk10tmtUe17tKUHpcilw1q2GBrfq7KsnfOx_wK91THiNTgNdPnHmMZE6j3NCBuDaHKk3tqPfA1fbzeeYQMdbeRswmjkqdv_zsWcEHpmmToYAD3W7I24CGD1QW-63_qxzIw-gcYMQlqr4B0GGeo8iM5srNkL6SA9aigsSHz3DxsZRQGS_hCd2w46WwRZbQXJybyW5f0oRSpmSPOoPkHjxAumTEom-uu9nxN4WvrrR3tpxMsASGADC5cWEp15oVWYYNUrTIhvqxiV_e-Q-FvPnlK-MXwa_ZOJyc25zUsc3byDujsywwjT3HozuXjLUuhjyOWJx7g54bUJ3Dw0aP31bJDam8NZmYNGUqKysM
- */
     std::string auth_token = get_auth_token(client_id, client_secret);
-    
-    // TRYING REQUEST WITH FULL URL FROM ABOVE
-    // creating the query to send
     http_client client(U(url));
     web::http::http_request req(methods::GET);
     req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));

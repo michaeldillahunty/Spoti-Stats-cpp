@@ -12,11 +12,12 @@ class FormatJSON {
    private:
       nlohmann::json json_obj;    
    public:
-      std::string FormatTrackJson();
-      std::string FormatPlaylistJson();
-      std::string FormatArtistJson();
-      std::string FormatAlbumJson();
-      std::string FormatUserProfileJson();
+      nlohmann::json FormatTrackJson();
+      nlohmann::json FormatPlaylistJson();
+      nlohmann::json FormatArtistJson();
+      nlohmann::json FormatAlbumJson();
+      nlohmann::json FormatUserProfileJson();
+      void SetJsonObject(nlohmann::json obj) { json_obj = obj; }
       nlohmann::json GetJsonObject(){ return json_obj; }
 
       void PrintFormattedJson(std::string type, nlohmann::json json_obj);
