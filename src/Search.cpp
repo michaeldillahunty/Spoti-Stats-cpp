@@ -1,4 +1,5 @@
 #include "../include/Search.hpp"
+#include "SpotifyAPI.hpp"
 
 // helper function to send an http request and return the json object
 nlohmann::json send_http_request(http_client* search_client, uri_builder builder, std::string auth_token) {
@@ -104,33 +105,28 @@ nlohmann::json SearchPlaylist::perform_search(std::string search_value, const st
 
 // the Spotify API endpoint for getting a public user's profile has a different endpoint than the previous searches
 nlohmann::json SearchPublicUser::perform_search(std::string search_value, const std::string auth_token) {
+    http_client client(U("https://api.spotify.com/v1"));
 
+    // Build the request URI
+    uri_builder builder(U("/users/"));
+    builder.append(search_value);
 
-/*       std::string encoded_uid = "";
-   for (const auto& c : search_value) {
-      if (c == ' ') {
-         encoded_uid += "%20";
-      } else {
-         encoded_uid += c;
-      }
-   }
-   
-   // set the values for builder and client
-   http_client* search_client = new http_client(U("https://api.spotify.com/v1/"));
-   uri_builder builder(U("/users/" + encoded_uid));
-   http_request req(methods::GET);
-   req.set_request_uri(builder.to_uri());
-   req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
+    builder.append_query(U("market"), U("US"));
+    builder.append_query(U("type"), U("user"));
+    builder.append_query(U("limit"), U(5));
 
-   // Send HTTP request and parse JSON response
-   http_response response = search_client->request(req).get();
-   nlohmann::json json_obj;
-   std::cout << "Status Code: " << response.status_code() << std::endl;
-   if (response.status_code() == status_codes::OK) {
-      json_obj = nlohmann::json::parse(response.extract_utf8string().get());
-   } else {
-      throw std::runtime_error("Failed to get user: " + search_value);
-   }
-   
-   return json_obj; */
+    http_request req(methods::GET);
+    req.set_request_uri(builder.to_uri());
+    req.headers().add(U("Authorization"), U("Bearer " + utility::conversions::to_string_t(auth_token)));
+
+    http_response response = client.request(req).get();
+
+    // Check if the request was successful
+    if (response.status_code() != status_codes::OK) {
+        throw std::runtime_error("Failed to send request: " + std::to_string(response.status_code()));
+    }
+
+    nlohmann::json json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+
+    return json_obj;
 }

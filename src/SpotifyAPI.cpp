@@ -121,7 +121,6 @@ nlohmann::json SpotifyAPI::api_request_test(const std::string& access_token, con
    CURLcode res; 
    if (curl) {
       std::string auth_header = get_auth_header(access_token);
-      std::string endpoint_url2 = "https://api.spotify.com/v1/me";
       std::string endpoint_url = "https://api.spotify.com/v1/users/";
       endpoint_url += user_id; 
       struct curl_slist* headers = nullptr; 
@@ -477,7 +476,6 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
       for (const auto& artist : json_obj["artists"]["items"]){
          std::cout << "\033[1m\033[32m" << i << ") Artist Name: " << "\033[0m" << artist["name"] << std::endl;
          std::cout << std::endl;
-
          i++;
       }
 
@@ -498,10 +496,14 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
          std::cout << "\n" << std::endl;
       }
 
-   } else if (type == "users") {
+   } else if (type == "user") {
       int i = 1; 
-      auto username = json_obj["display_name"];
-      std::cout << username << std::endl;
+      // for (const auto& user : json_obj["users"]["items"]){
+         std::cout << "\033[1m\033[32m" << i << ") User: " << "\033[0m" << json_obj["display_name"] << std::endl;
+         std::cout << "    profile link: " << json_obj["external_urls"]["spotify"] << std::endl;
+         i++;
+         std::cout << "\n" << std::endl;
+      // }
    }
 }
 

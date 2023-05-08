@@ -67,6 +67,7 @@ class SearchPlaylist : public Decorator {
 };
 
 class SearchPublicUser : public Decorator {
+   
    Search& search;
 
    public:

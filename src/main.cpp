@@ -196,14 +196,9 @@ int StartGuestMode(std::string token){
             spotify.PrintTop5("playlist", playlist);
 
          } else if (selection == 5) { // user profile 
-            std::string input; 
-            std::cout << "Search Username: ";
-            std::getline(std::cin, input);
             Search search; 
-            SearchPublicUser user_search(search);
-            nlohmann::json user = user_search.perform_search(input, token);
-            // spotify.PrintTop5("user", user);
-            std::cout << user.dump(4) << std::endl;
+            nlohmann::json user_profile = search_helper("user", "Search Username: ", search, token);
+            spotify.PrintTop5("user", user_profile);
 
          } else if (selection == 9) { // using input 9 for testing
             
@@ -272,6 +267,10 @@ nlohmann::json search_helper(std::string type, std::string prompt, Search& searc
    } else if (type == "playlist") {
       SearchPlaylist playlist_search(search_obj);
       result = playlist_search.perform_search(input, token); 
+      input.clear();
+   } else if (type == "user") {
+      SearchPublicUser user_search(search_obj);
+      result = user_search.perform_search(input, token);
       input.clear();
    }
    return result;
