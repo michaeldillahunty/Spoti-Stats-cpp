@@ -448,6 +448,7 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
       - \033[32m sets the color to green
       - \033[0m escape code resets the text format to the default
    */
+
    if (type == "track") {
       int i = 1;
       for (const auto& track : json_obj["tracks"]["items"]) {
@@ -465,10 +466,53 @@ void SpotifyAPI::PrintTop5(std::string type, nlohmann::json json_obj) {
          std::cout << "\n" << std::endl;
       }
 
+   } else if (type == "album"){
+      int i = 1; 
+      for (const auto& album : json_obj["albums"]["items"]){
+         std::cout << "\033[1m\033[32m" << i << ") Album: " << "\033[0m" << album["name"] << std::endl;
+         std::cout << "    by: ";
+         bool first_artist = true;
+         for (const auto& artist : album["artists"]) {
+         std::string artist_name = artist["name"];
+            if (!first_artist)
+               std::cout << ", ";
+            std::cout << artist_name;
+            first_artist = false;
+         }
+         i++;
+         std::cout << "\n" << std::endl;
+      }
+
    } else if (type == "artist") {
+      int i = 1; 
+      for (const auto& artist : json_obj["artists"]["items"]){
+         std::cout << "\033[1m\033[32m" << i << ") Artist Name: " << "\033[0m" << artist["name"] << std::endl;
+         std::cout << std::endl;
 
-   } else {
+         i++;
+      }
 
+   } else if (type == "playlist") {
+      int i = 1; 
+      for (const auto& playlist : json_obj["playlists"]["items"]){
+         std::cout << "\033[1m\033[32m" << i << ") Playlist: " << "\033[0m" << playlist["name"] << std::endl;
+         std::cout << "    by: ";
+         bool first = true;
+         for (const auto& creator : playlist["ower"]) {
+         std::string artist_name = playlist["display_name"];
+            if (!first)
+               std::cout << ", ";
+            std::cout << artist_name;
+            first = false;
+         }
+         i++;
+         std::cout << "\n" << std::endl;
+      }
+
+   } else if (type == "users") {
+      int i = 1; 
+      auto username = json_obj["display_name"];
+      std::cout << username << std::endl;
    }
 }
 

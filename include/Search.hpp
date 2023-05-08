@@ -3,6 +3,7 @@
 
 #include "SpotifyAPI.hpp"
 
+
 using namespace web;
 using namespace web::http;
 using namespace web::http::client;
@@ -58,6 +59,15 @@ class SearchPlaylist : public Decorator {
 
    public:
       SearchPlaylist(Search& s): search{s} {}
+
+      nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
+};
+
+class SearchPublicUser : public Decorator {
+   Search& search;
+
+   public:
+      SearchPublicUser(Search& s): search{s} {}
 
       nlohmann::json perform_search(std::string search_value, const std::string auth_token) override;
 };
