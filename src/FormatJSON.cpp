@@ -1,4 +1,5 @@
 #include "../include/FormatJSON.hpp"
+#include <iostream>
 
 std::string FormatJSON::FormatTrackJson(){
    nlohmann::json track_json = GetJsonObject();
@@ -108,6 +109,34 @@ std::string FormatJSON::FormatAlbumJson(){
     return result;
 }
 
-// std::string FormatJSON::FormatUserProfileJson(){
-//    std::string display_name, external_url, followers, id;
-// }
+void FormatJSON::PrintFormattedJson(std::string type, nlohmann::json json_obj){
+   nlohmann::json formatted_json;
+   if (type == "track") {
+      formatted_json = FormatTrackJson();
+   } else if (type == "artist") {
+      formatted_json = FormatArtistJson();
+   } else if (type == "album") {
+      formatted_json = FormatAlbumJson();
+   } else if (type == "playlist") {
+      formatted_json = FormatPlaylistJson();
+   } else {
+      std::cout << "INVALID SELECTION" << std::endl;
+   }
+
+   for (const auto& [key, value] : formatted_json.items()) {
+      std::cout << "\033[1m\033[32m" << key << ":\033[0m ";
+      if (value.is_string() || value.is_number() || value.is_boolean()) {
+         std::cout << value.dump() << std::endl;
+      } else if (value.is_array()) {
+         for (const auto& elem : value) {
+            std::cout << "- " << elem.dump() << std::endl;
+         }
+      } else if (value.is_object()) {
+         for (const auto& [obj_key, obj_value] : value.items()) {
+            std::cout << "  \033[1m" << obj_key << ":\033[0m " << obj_value.dump() << std::endl;
+         }
+      } else {
+         std::cout << "Invalid JSON type" << std::endl;
+      }
+   }
+}

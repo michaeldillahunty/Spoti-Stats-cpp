@@ -18,5 +18,7 @@ class FormatJSON {
       std::string FormatAlbumJson();
       std::string FormatUserProfileJson();
       nlohmann::json GetJsonObject(){ return json_obj; }
+
+      void PrintFormattedJson(std::string type, nlohmann::json json_obj);
 };
 #endif

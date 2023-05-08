@@ -5,6 +5,7 @@
 #include "../src/models/BasicSpotify.h"
 #include "../include/Search.hpp"
 #include "../include/DetailedSearch.hpp"
+#include "../include/FormatJSON.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include <cctype>
@@ -245,7 +246,8 @@ int StartGuestMode(std::string token){
             opts["market"] = "US";
             nlohmann::json songs = track_search.perform_search(input, token);
             std::cout << songs.dump(4) << std::endl;
-            spotify.PrintTop5("track", songs);
+            // spotify.PrintTop5("track", songs);
+
             // nlohmann::json songs = track_search.perform_search(input, q_opts, token);
 
             // spotify.PrintTop5("track", songs);
