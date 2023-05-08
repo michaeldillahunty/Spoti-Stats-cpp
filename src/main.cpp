@@ -171,29 +171,59 @@ int StartGuestMode(std::string token){
          std::string input; 
          std::getline(std::cin, input);
          selection = std::stoi(input);
+       
+       DetailedSearch detailed_search;
 
          if (selection == 1) { // find a song
             Search search;       
             nlohmann::json track = search_helper("track", "Search Track: ", search, token);
             spotify.PrintTop5("track", track);
             input.clear();
+             
+            // detailed search
+            std::cout << "Select a track to learn more about it.\n> ";
+            std::getline(std::cin, input);
+            selection = std::stoi(input);
+            std::string track_id = track["tracks"]["items"][selection-1]["id"];
+            nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
 
          } else if (selection == 2) {
             Search search;       
             nlohmann::json album = search_helper("album", "Search Album: ", search, token);
             spotify.PrintTop5("album", album);
             input.clear();
+             
+            // detailed search
+            std::cout << "Select an album to learn more about it.\n> ";
+            std::getline(std::cin, input);
+            selection = std::stoi(input);
+            std::string album_id = album["albums"]["items"][selection-1]["id"];
+            nlohmann::json detailed_album = detailed_search.detailed_search("v1/albums/", album_id, token);
          
          } else if (selection == 3) {
             Search search;       
             nlohmann::json artist = search_helper("artist", "Search Artist: ", search, token);
             spotify.PrintTop5("artist", artist);
+             
+            // detailed search
+            std::cout << "Select an artist to learn more about them.\n> ";
+            std::getline(std::cin, input);
+            selection = std::stoi(input);
+            std::string artist_id = artist["artists"]["items"][selection-1]["id"];
+            nlohmann::json detailed_artist = detailed_search.detailed_search("v1/artists/", artist_id, token);
 
          } else if (selection == 4) { // playlist
             Search search;       
             nlohmann::json playlist = search_helper("playlist", "Search Playlist: ", search, token);
             // std::cout << playlist.dump(4) << std::endl;
             spotify.PrintTop5("playlist", playlist);
+             
+            // detailed search
+            std::cout << "Select a playlist to learn more about it.\n> ";
+            std::getline(std::cin, input);
+            selection = std::stoi(input);
+            std::string playlist_id = playlist["playlists"]["items"][selection-1]["id"];
+            nlohmann::json detailed_playlist = detailed_search.detailed_search("v1/playlists/", playlist_id, token);
 
          } else if (selection == 5) { // user profile 
             Search search; 
@@ -218,29 +248,10 @@ int StartGuestMode(std::string token){
             spotify.PrintTop5("track", songs);
             // nlohmann::json songs = track_search.perform_search(input, q_opts, token);
 
-            // spotify.PrintTop5("track", songs); 
-            DetailedSearch detailed_search;
-             
-/*          std::string track_id = songs["tracks"]["items"][0]["id"];
-            nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
-
-            std::string artist_id = songs["artists"]["items"][0]["id"];
-            nlohmann::json detailed_artist = detailed_search.detailed_search("v1/artists/", artist_id, token);
-             
-            std::string album_id = songs["albums"]["items"][0]["id"];
-            nlohmann::json detailed_album = detailed_search.detailed_search("v1/albums/", album_id, token);
-             
-            std::string playlist_id = songs["playlists"]["items"][0]["id"];
-            nlohmann::json detailed_playlist = detailed_search.detailed_search("v1/playlists/", playlist_id, token);
-             
-            std::cout << detailed_playlist.dump(4) << std::endl; 
-*/
-
+            // spotify.PrintTop5("track", songs);
          } else {
             std::cout << "Invalid Selection" << std::endl;
-
          }
-      // }
    } catch (std::exception& e) {
       std::cout << e.what() << std::endl;
    }
