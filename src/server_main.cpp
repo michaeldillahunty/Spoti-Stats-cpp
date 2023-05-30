@@ -30,7 +30,7 @@ void* ConnectionListener(void* arg){
    
     ServerNetwork* network = ServerNetwork::getInstance();
     
-    bool is_connected = true;
+   //  bool is_connected = true;
    vector<pthread_t*> thread_vec;
    int client_sock_fd; 
 

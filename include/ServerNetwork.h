@@ -11,9 +11,9 @@
 #include <algorithm>
 #include <cstring>
 
+#include <nlohmann/json.hpp>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <nlohmann/json.hpp>
 #include <curl/curl.h>
 #include <arpa/inet.h>
 

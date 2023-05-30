@@ -23,13 +23,13 @@ include_directories(${CURL_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/models)
 
-file(GLOB MODELS_SRCS "src/models/*.cpp")
+# file(GLOB MODELS_SRCS "src/models/*.cpp")
 
 # add_library(SpotifyFactoryLib )
 
-# add_executable(server src/ServerNetwork.cpp src/server_main.cpp ${MODELS_SRCS} src/SpotifyFactory.cpp)
+add_executable(server src/ServerNetwork.cpp src/server_main.cpp src/SpotifyFactory.cpp)
 add_executable(spotify src/ClientNetwork.cpp src/SpotifyAPI.cpp src/main.cpp src/Search.cpp src/DetailedSearch.cpp src/FormatJSON.cpp)
 
 
-# target_link_libraries(server nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(server nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(spotify nlohmann_json::nlohmann_json cpprestsdk::cpprest ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)

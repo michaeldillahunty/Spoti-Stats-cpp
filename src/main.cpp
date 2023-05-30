@@ -171,7 +171,6 @@ int StartGuestMode(std::string token){
          std::getline(std::cin, input);
          selection = std::stoi(input);
       
-
          if (selection == 1) { // find a song
             Search search;       
             nlohmann::json track = search_helper("track", "Search Track: ", search, token);
@@ -238,7 +237,7 @@ int StartGuestMode(std::string token){
 
          } else if (selection == 6) { // using input 9 for testing
             std::cout << "Exiting..." << std::endl;
-            return 0;
+            exit(0);
          } else {
             std::cout << "Invalid Selection" << std::endl;
          }
