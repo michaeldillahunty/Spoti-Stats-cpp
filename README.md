@@ -1,11 +1,11 @@
 # ECE3220-Final-Project
-Extra Libraries:
+## Extra Libraries:
 - cpprestsdk (https://github.com/microsoft/cpprestsdk)
 - libcurl (https://curl.se/libcurl/)
 - nlohmann/json (https://github.com/nlohmann/json)
 (On mac, brew install to install)
 
-Compile Instructions:
+## Compile Instructions:
 1) Clone this repo
 2) mkdir build
 3) cd build
