@@ -47,22 +47,27 @@ int main(){
    selection = std::stoi(input);
 
       /**
-         MODE: User
+       * MODE: User
       */
       if (selection == 1) { 
          cout << "\n\n==================";
-         cout << "\nCurrent User: User";
+         cout << "\nCurrent User: <User>";
          cout << "\n==================" << endl;
          
          StartConnection();
-         
+      
+      /**
+       * MODE: Guest
+      */
       } else if (selection == 2) { /// GUEST MODE
-         cout << "\nCurrent User: Guest" << endl;
+         cout << "================" << endl;
+         cout << "\033[1m\033[32mCurrent Mode: Guest\033[0m" << endl;
+         cout << "================" << endl;
          SpotifyAPI spotify; 
          std::string client_id = spotify.GetClientID();
          std::string client_secret = spotify.GetClientSecret();
          std::string guest_token = spotify.get_auth_token(client_id, client_secret);
-         std::cout << "Guest Token: " << guest_token << endl;
+         // std::cout << "Guest Token: " << guest_token << endl;
          bool is_running = false; 
          while (!is_running){
             StartGuestMode(guest_token);
@@ -136,20 +141,15 @@ int StartConnection(){
          if (redir_input == "y") {
             cout << "Redirecting to Spotify Page..." << endl;
             spotify.request_authorization();
-
          } else if (redir_input == "n") {
             cout << "Valid Input - No" << endl;
          } else {
             cout << "Invalid Input" << endl;
          }
-
       } catch (exception& e) {
          cout << e.what() << endl;
-      }
-
-      
+      }  
    }
-
 }
 
 
@@ -162,6 +162,7 @@ int StartConnection(){
 int StartGuestMode(std::string token){
    DisplayGuestMenu();
    SpotifyAPI spotify; 
+   DetailedSearch detailed_search;
    // bool is_running = false;
    int selection; 
    try {
@@ -171,19 +172,25 @@ int StartGuestMode(std::string token){
          std::getline(std::cin, input);
          selection = std::stoi(input);
       
-         if (selection == 1) { // find a song
+         /**
+          * SEARCH SONG
+         */
+         if (selection == 1) { 
             Search search;       
             nlohmann::json track = search_helper("track", "Search Track: ", search, token);
             spotify.PrintTop5("track", track);
             input.clear();
              
             // detailed search
-            // std::cout << "Select a track to learn more about it.\n> ";
-            // std::getline(std::cin, input);
-            // selection = std::stoi(input);
-            // std::string track_id = track["tracks"]["items"][selection-1]["id"];
-            // nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
-
+            std::cout << "Select a track to learn more about it.\n> ";
+            std::getline(std::cin, input);
+            selection = std::stoi(input);
+            std::string track_id = track["tracks"]["items"][selection-1]["id"];
+            nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
+            std::cout << detailed_track << std::endl;
+         /**
+          * SEARCH ALBUMS
+         */
          } else if (selection == 2) {
             Search search;       
             nlohmann::json album = search_helper("album", "Search Album: ", search, token);
@@ -197,6 +204,9 @@ int StartGuestMode(std::string token){
             // std::string album_id = album["albums"]["items"][selection-1]["id"];
             // nlohmann::json detailed_album = detailed_search.detailed_search("v1/albums/", album_id, token);
          
+         /**
+          * SEARCH ARTISTS
+         */
          } else if (selection == 3) {
             Search search;       
             nlohmann::json artist = search_helper("artist", "Search Artist: ", search, token);
@@ -209,6 +219,9 @@ int StartGuestMode(std::string token){
             // std::string artist_id = artist["artists"]["items"][selection-1]["id"];
             // nlohmann::json detailed_artist = detailed_search.detailed_search("v1/artists/", artist_id, token);
 
+         /** 
+          * SEARCH PLAYLISTS
+         */
          } else if (selection == 4) { // playlist
             Search search;       
             nlohmann::json playlist = search_helper("playlist", "Search Playlist: ", search, token);
@@ -230,14 +243,26 @@ int StartGuestMode(std::string token){
             // // std::cout << formatted.dump(4) << std::endl;
             // // format.PrintFormattedJson("playlist", formatted);
 
-         } else if (selection == 5) { // user profile 
+         /**
+          * SEARCH USER PROFILES
+         */
+         } else if (selection == 5) { 
             Search search; 
             nlohmann::json user_profile = search_helper("user", "Search Username: ", search, token);
             spotify.PrintTop5("user", user_profile);
-
-         } else if (selection == 6) { // using input 9 for testing
+         
+         /**
+          * EXIT
+         */
+         } else if (selection == 6) { 
             std::cout << "Exiting..." << std::endl;
             exit(0);
+         
+         /** @def 
+          * TESTING
+         */ 
+         } else if (selection == 9) {
+
          } else {
             std::cout << "Invalid Selection" << std::endl;
          }
@@ -278,7 +303,6 @@ nlohmann::json search_helper(std::string type, std::string prompt, Search& searc
 
 
 // void PrintDetailedJson(nlohmann::json formatted_json){
-
 //    for (const auto& [key, value] : formatted_json.items()) {
 //       std::cout << "\033[1m\033[32m" << key << ":\033[0m ";
 //       if (value.is_string() || value.is_number() || value.is_boolean()) {

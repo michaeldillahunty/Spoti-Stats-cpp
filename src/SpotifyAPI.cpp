@@ -101,6 +101,7 @@ std::string SpotifyAPI::get_auth_token(const std::string& client_id, const std::
       file << res_json; 
       file.close();
       std::string access_token = res_json["access_token"];
+      // std::cout << "ACCESS TOKEN: " << access_token << std::endl;
       return access_token;
    }
    curl_global_cleanup();
@@ -411,8 +412,8 @@ std::string SpotifyAPI::request_authorization(){
     req.headers().add(U("Authorization"), utility::conversions::to_utf8string("Bearer " + auth_token));
     http_response response = client.request(req).get();
 
-    // "provided uri is invalid: ...
-    std::cout << "AUTHORIZATION RESPONSE:\n" << response.to_string() << std::endl;
+    /** ERROR: "provided uri is invalid: ... */
+    std::cout << "\nAUTHORIZATION RESPONSE:\n" << response.to_string() << std::endl;
 
     // check for valid status code and parse response to json object if OK
     nlohmann::json json_obj;
