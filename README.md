@@ -8,6 +8,7 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 - nlohmann/json (https://github.com/nlohmann/json) : `nlohmann json` API allows for easy JSON manipulation in C++
 
 ### Installing Libraries:
+
 - `cpprestsdk` and `nlohmann json`
   - On MacOS: `brew install nlohmann-json cpprestsdk`
   - On Linux: `sudo apt-get install nlohmann-json-dev`
