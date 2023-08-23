@@ -37,7 +37,18 @@ int main(){
    std::string client_secret = "eb80eac6f244443fae50300fc8db1479";
    // ClientNetwork network = ClientNetwork();
    
-   cout << "\nWelcome to Spoti-Stats!" << endl;
+   // cout << "\nWelcome to Spoti-Stats!" << endl;
+   cout << "\033[1m\033[32m"
+         " _____             _   _        _____ _        _       \n"
+         "/  ___|           | | (_)      /  ___| |      | |      \n"
+         "\\ `--. _ __   ___ | |_ _ ______\\ `--.| |_ __ _| |_ ___ \n"
+         " `--. \\ '_ \\ / _ \\| __| |______|`--. \\ __/ _` | __/ __|\n"
+         "/\\__/ / |_) | (_) | |_| |      /\\__/ / || (_| | |_\\__ \\ \n"
+         "\\____/| .__/ \\___/ \\__|_|      \\____/ \\__\\__,_|\\__|___/\n"
+         "      | |                                              \n"
+         "      |_|                                              \n"
+         "\033[0m";
+   
    DisplayHomeMenu();
    
    cout << "> ";
@@ -187,7 +198,9 @@ int StartGuestMode(std::string token){
             selection = std::stoi(input);
             std::string track_id = track["tracks"]["items"][selection-1]["id"];
             nlohmann::json detailed_track = detailed_search.detailed_search("v1/tracks/", track_id, token);
-            std::cout << detailed_track << std::endl;
+            // std::cout << detailed_track << std::endl;
+            
+
          /**
           * SEARCH ALBUMS
          */

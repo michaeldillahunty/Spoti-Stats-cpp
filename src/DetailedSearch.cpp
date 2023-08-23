@@ -11,7 +11,6 @@ using namespace web::http::client;
  * @return json object containing the data about the selected song
  */
 nlohmann::json DetailedSearch::detailed_search(std::string endpoint, std::string id, std::string auth_token) {
-    
     std::string url = "https://api.spotify.com/" + endpoint + id;
     http_client search_client(U(url));
     
@@ -23,17 +22,17 @@ nlohmann::json DetailedSearch::detailed_search(std::string endpoint, std::string
     nlohmann::json json_obj;
     
     if (response.status_code() == status_codes::OK) {
-       json_obj = nlohmann::json::parse(response.extract_utf8string().get());
-       std::cout << "JSON OBJ BEFORE: " << json_obj << std::endl;
-       // if the album property has a "available_markets" property -> delete it
-       if (json_obj["album"].contains("available_markets")) {
-         json_obj["album"].erase("available_markets");
-       }
-       json_obj.erase(("available_markets"));
-       
-       std::cout << "JSON OBJ AFTER: " << json_obj << std::endl;
+        json_obj = nlohmann::json::parse(response.extract_utf8string().get());
+        // std::cout << "JSON OBJ BEFORE: " << json_obj << std::endl;
+        // if the album property has a "available_markets" property -> delete it
+        if (json_obj["album"].contains("available_markets")) {
+            json_obj["album"].erase("available_markets");
+        }
+        json_obj.erase(("available_markets"));
+        
+        // std::cout << "JSON OBJ AFTER: " << json_obj << std::endl;
     } else {
-       throw std::runtime_error("Failed to get spotify details");
+        throw std::runtime_error("Failed to get spotify details");
     }
     return json_obj;
 }
