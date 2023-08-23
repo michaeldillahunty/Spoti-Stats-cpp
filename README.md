@@ -9,9 +9,16 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 
 ### Installing Libraries:
 `cpprestsdk` and `nlohmann json`
-- On MacOS: `brew install nlohmann-json cpprestsdk`
-- On Linux: `sudo apt-get install nlohmann-json-dev`
-  
+  - On MacOS: `brew install nlohmann-json cpprestsdk`
+  - On Linux: `sudo apt-get install nlohmann-json-dev`
+
+`libcurl`: 
+  1) Install `curl`: `brew install curl`
+  2) If any compilation errors occur, try setting:   
+     ```
+     export LDFLAGS="-L/usr/local/opt/curl/lib"
+     export CPPFLAGS='-I/usr/local/opt/curl/include"
+     ```
 
 ## How to Use:
 1) Clone the Spoti-Stats repository: `git clone https://github.com/michaeldillahunty/Spoti-Stats-cpp.git`
