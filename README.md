@@ -5,7 +5,7 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 ## Libraries and Packages:
 - cpprestsdk (https://github.com/microsoft/cpprestsdk) : `cpprestsdk` from Microsoft used for Client/Server connection and oAuth authorization
 - libcurl (https://curl.se/libcurl/) : `libcurl` allows the use of CRUD methods to communicate with the Spotify API
-- nlohmann/json (https://github.com/nlohmann/json) : `nlohmann json` API allows for easy JSON manipulation
+- nlohmann/json (https://github.com/nlohmann/json) : `nlohmann json` API allows for easy JSON manipulation in C++
 
 ### Installing Libraries:
 `cpprestsdk` and `nlohmann json`
