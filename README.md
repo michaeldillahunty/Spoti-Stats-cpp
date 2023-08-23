@@ -1,6 +1,10 @@
 # Spoti-Stats
 ## Description:
-Spoti-Stats is a C++ command line application which utilizes the [Spotify Web API](https://developer.spotify.com/documentation/web-api) and allows you to search songs, tracks, albums, etc.
+Spoti-Stats is a C++ command line application which utilizes the [Spotify Web API](https://developer.spotify.com/documentation/web-api) and allows you to search songs, tracks, albums, etc.</br>
+Goals:
+- Use CRUD methods to communicate with API 
+- Implement solid programming practices through using OOP and design patterns
+- Display good understanding of the C++ language
 
 ## Libraries and Packages:
 - cpprestsdk (https://github.com/microsoft/cpprestsdk) : `cpprestsdk` from Microsoft used for Client/Server connection and oAuth authorization
