@@ -9,31 +9,31 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 
 ### Installing Libraries:
 - `cpprestsdk` and `nlohmann json`
-  - On MacOS: `brew install nlohmann-json cpprestsdk`
-  - On Linux: `sudo apt-get install nlohmann-json-dev`
+  - On MacOS: `$ brew install nlohmann-json cpprestsdk`
+  - On Linux: `$ sudo apt-get install nlohmann-json-dev`
 
 - `libcurl`:
   1) Install `curl`: </br>
-     **Homebrew:** `brew install curl`   
+     **Homebrew:** `$ brew install curl`   
      &emsp;&emsp;OR   
      **Manually:** Download package from: [https://curl.se/download.html](https://curl.se/download.html)
   3) If any compilation errors occur, try setting:
      ```
-     export LDFLAGS="-L/usr/local/opt/curl/lib"
-     export CPPFLAGS="-I/usr/local/opt/curl/include"
+     $ export LDFLAGS="-L/usr/local/opt/curl/lib"
+     $ export CPPFLAGS="-I/usr/local/opt/curl/include"
      ```
 
 ## How to Use:
-1) Clone the Spoti-Stats repository: `git clone https://github.com/michaeldillahunty/Spoti-Stats-cpp.git`
-2) `cd Spoti-Stats-cpp`
-3) `mkdir build`
-4) `cd build`
+1) Clone the Spoti-Stats repository: `$ git clone https://github.com/michaeldillahunty/Spoti-Stats-cpp.git`
+2) `$ cd Spoti-Stats-cpp`
+3) `$ mkdir build`
+4) `$ cd build`
 5) On MacOS:   
-      Run `cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
+      Run `$ cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
 7) `make` : will create 2 executable files: `server` and `spotify`
 8) Run the executable file(s)  
-   a. To run in *Guest Mode* (no login required) - Use: `./spotify`   
+   a. To run in *Guest Mode* (no login required) - Use: `$ ./spotify`   
    b. To run in *User Mode* (requires Spotify login and authentication):   
-      a. Run `./server`   
+      a. Run `$ ./server`   
       b. Open another terminal instance and navigate to the same `build` directory    
-         - In the second instance run `./spotify`
+         - In the second instance run `$ ./spotify`
