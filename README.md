@@ -20,9 +20,10 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 4) `cd build`
 5) On MacOS:   
       Run `cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
-7) `make` will create 2 executable files: `server` and `spotify`
-8) To run in *Guest Mode* (no login required): run `./spotify`
-   - If you wish to run in *User Mode* (requires Spotify login and authentication):   
-      a. First run `./server`   
-      b. Open another terminal instance and navigate to the same `build` dir    
-         - In the new instance run `./spotify`
+7) `make` : will create 2 executable files: `server` and `spotify`
+8) Run the executable file(s)  
+   a. To run in *Guest Mode* (no login required) - Use: `./spotify`   
+   b. To run in *User Mode* (requires Spotify login and authentication):   
+      a. Run `./server`   
+      b. Open another terminal instance and navigate to the same `build` directory    
+         - In the second instance run `./spotify`
