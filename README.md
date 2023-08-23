@@ -1,5 +1,5 @@
 # Spoti-Stats
-### Description:
+## Description:
 Spoti-Stats is a C++ command line application which utilizes the [Spotify Web API](https://developer.spotify.com/documentation/web-api)
 
 ## Libraries and Packages:
