@@ -1,18 +1,29 @@
-## Extra Libraries:
-- cpprestsdk (https://github.com/microsoft/cpprestsdk)
-- libcurl (https://curl.se/libcurl/)
-- nlohmann/json (https://github.com/nlohmann/json)
-(On mac, brew install to install)
+# Spoti-Stats
+### Description:
+Spoti-Stats is a C++ command line application which utilizes the Spotify Web API 
 
-## Compile Instructions:
-1) Clone the repository
-2) `cd` into the repo
-3) `mkdir build` if a build directory doesn't already exist
+## Libraries and Packages:
+- cpprestsdk (https://github.com/microsoft/cpprestsdk) : `cpprestsdk` from Microsoft used for Client/Server connection and oAuth authorization
+- libcurl (https://curl.se/libcurl/) : `libcurl` allows the use of CRUD methods to communicate with the Spotify API
+- nlohmann/json (https://github.com/nlohmann/json) : `nlohmann json` API allows for easy JSON manipulation
+
+### Installing Libraries:
+`cpprestsdk` and `nlohmann json`
+- On MacOS: `brew install nlohmann-json cpprestsdk`
+- On Linux: `sudo apt-get install nlohmann-json-dev`
+  
+
+## How to Use:
+```
+1) Clone the Spoti-Stats repository
+2) `cd Spoti-Stats`
+3) `mkdir build`
 4) `cd build`
-5) Run `cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
-6) Run `make` to compile
-7) To run without the server (guest mode) use `./spotify`
-   - If you wish to run with the server (user mode): 
+5) On MacOS: Run `cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
+6) `make` will create 2 executable files: `server` and `spotify`
+7) To run in *Guest Mode* (no login required): run `./spotify`
+   - If you wish to run in *User Mode* (requires Spotify login and authentication): 
       a. First run `./server`
-      b. Open another terminal instance and navigate to the `build` dir 
-         - With the other instance still running the server, in the new instance run `./spotify`
+      b. Open another terminal instance and navigate to the same `build` dir 
+         - In the new instance run `./spotify`
+```
