@@ -14,8 +14,8 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
   
 
 ## How to Use:
-1) Clone the Spoti-Stats repository
-2) `cd Spoti-Stats`
+1) Clone the Spoti-Stats repository: `git clone https://github.com/michaeldillahunty/Spoti-Stats-cpp.git`
+2) `cd Spoti-Stats-cpp`
 3) `mkdir build`
 4) `cd build`
 5) On MacOS: Run `cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl/1.0.2s/lib ..` to get all necessary dependencies
