@@ -15,7 +15,7 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 `libcurl`:
   1) 
     Install `curl`: `brew install curl`   
-      OR  
+        OR  
     Download package from: https://curl.se/download.html    
   2) If any compilation errors occur, try setting:   
      ```
