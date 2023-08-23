@@ -14,7 +14,6 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
   
 
 ## How to Use:
-```
 1) Clone the Spoti-Stats repository
 2) `cd Spoti-Stats`
 3) `mkdir build`
@@ -26,4 +25,3 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
       a. First run `./server`
       b. Open another terminal instance and navigate to the same `build` dir 
          - In the new instance run `./spotify`
-```
