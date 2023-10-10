@@ -4,8 +4,8 @@ Spoti-Stats is a C++ command line application which utilizes the [Spotify Web AP
 
 **Goals:**
 ---
-- Use CRUD operations to communicate with API 
-- Implement solid practices through the use of OOP, design patterns, and following basic programming principles
+- Use HTTP methods to communicate with API
+- Implement solid practices through the use of OOP, design patterns, and practice other basic programming principles
 
 ## Libraries and Packages:
 - cpprestsdk (https://github.com/microsoft/cpprestsdk) : `cpprestsdk` from Microsoft used for Client/Server connection and oAuth authorization
